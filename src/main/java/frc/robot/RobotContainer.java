@@ -43,7 +43,7 @@ import javax.swing.plaf.basic.BasicTreeUI.TreePageAction;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.PhotonVision;
+// import frc.robot.subsystems.PhotonVision;
 import frc.robot.subsystems.intakesub;
 
 import frc.robot.subsystems.lookuptable.lookuptable;
@@ -82,7 +82,7 @@ public class RobotContainer
   private final Boxpiv boxpivsub = new Boxpiv();
  // private final Climb climbsub = new Climb();
   private final projectiles projectilesub = new projectiles();
-  private final PhotonVision Vision = new PhotonVision();
+  // private final PhotonVision Vision = new PhotonVision();
 
 
                                                                   
@@ -256,9 +256,10 @@ driver_limelightButton.whileTrue(new teleoplimelight(
 
 SmartDashboard.putNumber("boxpivencoder encoder", boxpivsub.encoder());
 
-SmartDashboard.putNumber("Intake Position", new intakesub().encoder());
+
 //climbsub.shuffleboard();
 projectilesub.shuffleboard();
+intakesub.shuffleboard();
 
 
 
@@ -281,11 +282,11 @@ TrapButton.whileTrue(new SequentialCommandGroup(boxpivsub.boxpivcmdTO(10),projec
 // intakegroundButton
 intakeButton.whileTrue(
 new SequentialCommandGroup(
-   intakesub.intakepid(10),
-  new ParallelCommandGroup(intakesub.intakeCommand(0.3),
-   intakesub.feederCommand()
-)
-));
+   intakesub.intakepid(-17.1428),intakesub.intakefeaderCommand(-0.50))
+
+   
+  
+);
 //intakehumanplayer
 // intakehmanplayerButton.whileTrue(
 // new SequentialCommandGroup(
@@ -322,29 +323,29 @@ climbPivButton.whileTrue(
   );
   
     
-  var visionEst = Vision.getEstimatedGlobalPose();
-  visionEst.ifPresent(
-          est -> {
-              var estPose = est.estimatedPose.toPose2d();
-              // Change our trust in the measurement based on the tags we can see
-              var estStdDevs = Vision.getEstimationStdDevs(estPose);
+  // var visionEst = Vision.getEstimatedGlobalPose();
+  // visionEst.ifPresent(
+  //         est -> {
+  //             var estPose = est.estimatedPose.toPose2d();
+  //             // Change our trust in the measurement based on the tags we can see
+  //             var estStdDevs = Vision.getEstimationStdDevs(estPose);
 
-              drivebase.addVisionMeasurement(
-                      est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
-          });
+  //             drivebase.addVisionMeasurement(
+  //                     est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+  //         });
 
     
 		
     SmartDashboard.putData("Auto chooser",autoChooser);
     //Auto Aim Speaker 
-    speakerButton.whileTrue(
-      new SequentialCommandGroup(new ParallelDeadlineGroup(new autorotateodometry(
-        drivebase,
-        () -> driver.getLeftY(),
-        () -> driver.getLeftX(), 
+    // speakerButton.whileTrue(
+    //   new SequentialCommandGroup(new ParallelDeadlineGroup(new autorotateodometry(
+    //     drivebase,
+    //     () -> driver.getLeftY(),
+    //     () -> driver.getLeftX(), 
   
-        () -> driver.getRightX(), () -> false),new LookUpShot(boxpivsub, projectilesub,() ->drivebase.calcDistToSpeaker()))
-      ,new ParallelCommandGroup(intakesub.feederCommand(),new LookUpShotoot(boxpivsub, projectilesub,() ->drivebase.calcDistToSpeaker()))));
+    //     () -> driver.getRightX(), () -> false),new LookUpShot(boxpivsub, projectilesub,() ->drivebase.calcDistToSpeaker()))
+    //   ,new ParallelCommandGroup(intakesub.feederCommand(),new LookUpShotoot(boxpivsub, projectilesub,() ->drivebase.calcDistToSpeaker()))));
       
         
     

@@ -18,7 +18,7 @@ public class intakesub extends SubsystemBase{
     private CANSparkMax intakepidmotor = new CANSparkMax(17,MotorType.kBrushless);
     private CANSparkMax FeederMotor = new CANSparkMax(20,MotorType.kBrushless);
 
-    private RelativeEncoder encoder = intakemotorR.getEncoder();
+    private RelativeEncoder encoder = intakepidmotor.getEncoder();
     private PIDController pid = new PIDController(0.01, 0, 0);
 
     public intakesub(){}
@@ -29,6 +29,18 @@ public class intakesub extends SubsystemBase{
     public void setmotor(double speed){
        
         intakemotorR.set(speed);
+        
+    }
+    public void setmotorstop(double speed){
+       
+        intakemotorR.set(speed);
+        FeederMotor.set(speed);
+        
+    }
+     public void setmotorfeeder(double speed){
+       
+        intakemotorR.set(speed);
+        FeederMotor.set(speed);
     }
     public void FeederMotor (){
         FeederMotor.set(0.3);
@@ -96,6 +108,16 @@ public class intakesub extends SubsystemBase{
 
         );
     }
+    public Command intakeCommandfeeder(double speed){
+        return run(
+
+        () -> setmotorfeeder(speed)
+
+        
+
+        );
+    }
+
 
     public Command intakepid(double setpoint){
     
@@ -121,7 +143,38 @@ public class intakesub extends SubsystemBase{
     
             @Override
             public boolean isFinished() {
-                return encoder.getPosition() == setpoint ; // Check if the setpoint is reached
+                return encoder.getPosition() >= setpoint-1 && encoder.getPosition()<= setpoint+1; // Check if the setpoint is reached
+            }
+        };
+    }
+
+     public Command intakefeaderCommand(double speed){
+    
+        
+        return new Command() {
+            @Override
+            public void initialize() {
+                // Initialization code, such as resetting encoders or PID controllers
+            }
+    
+            @Override
+            public void execute() {
+                // Assuming setpid() calculates the speed based on PID
+                setmotorfeeder(speed);
+
+            
+            
+            }
+    
+            @Override
+            public void end(boolean interrupted) {
+                setmotorstop(0);
+                // Stop the motor when the command ends or is interrupted
+            }
+    
+            @Override
+            public boolean isFinished() {
+                return false; // Check if the setpoint is reached
             }
         };
     }
