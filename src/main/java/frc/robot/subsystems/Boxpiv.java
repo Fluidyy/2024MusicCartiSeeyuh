@@ -20,7 +20,7 @@ public class Boxpiv extends SubsystemBase{
     private TalonFX boxpivL = new TalonFX(7);
 
       
-    private PIDController pid = new PIDController(0.01, 0, 0);
+    private PIDController pid = new PIDController(0.03, 0, 0);
     
 
     public Boxpiv(){}
@@ -30,14 +30,15 @@ public class Boxpiv extends SubsystemBase{
     }
     public void boxpivotMotor(double speed){
         boxpivR.set(speed);
-        boxpivL.set(speed);
+        boxpivL.set(-speed);
        
        
     }
-    public double encoder(){
-       
-        return boxpivR.getPosition().getValueAsDouble();
 
+
+    public void encoder(){
+       
+    SmartDashboard.putNumber("Boxpiv", boxpivR.getPosition().getValueAsDouble());  
     }
 
     public double setSetpoint(double setpoint){
@@ -121,7 +122,7 @@ public class Boxpiv extends SubsystemBase{
     
             @Override
             public boolean isFinished() {
-                return boxpivR.getPosition().getValueAsDouble() == setpoint; // Check if the setpoint is reached
+                return false;
             }
         };
     }    

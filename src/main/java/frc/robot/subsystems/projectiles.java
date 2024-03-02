@@ -22,7 +22,7 @@ public class projectiles extends SubsystemBase{
     private CANSparkMax wrist = new CANSparkMax(19, MotorType.kBrushless);
     private CANSparkMax elevator = new CANSparkMax(21, MotorType.kBrushless);
     private PIDController wristpiPidController = new PIDController(0.01, 0, 0);
-    private PIDController elevatorpidcController = new PIDController(0.01, 0, 0);
+    private PIDController elevatorpidcController = new PIDController(0.05, 0, 0);
     private RelativeEncoder wristE = wrist.getEncoder();
     private RelativeEncoder elevatorE = elevator.getEncoder();
      private RelativeEncoder OutakeE = OutakeL.getEncoder();
@@ -48,6 +48,9 @@ public void shuffleboard(){
 
     SmartDashboard.putNumber("Outake Velocity", OutakeE.getVelocity());
 }
+public void elevatorshuffle(){
+    SmartDashboard.putNumber("elevator",elevatorE.getPosition());
+}
 
 public void setoutakeTE(double speed){
     OutakeL.set(speed);
@@ -64,7 +67,8 @@ public void Unjam(){
 
 public double elevatorpid(double setpoint){
     elevatorpidcController.setSetpoint(setpoint);
-    return elevatorpidcController.calculate(elevatorE.getPosition());
+    double move = elevatorpidcController.calculate(elevatorE.getPosition());
+    return move;
 
 }
 
@@ -83,7 +87,7 @@ public Command elevatorcmd(double setpoint){
 
         @Override
         public void execute() {
-            double speed = elevatorpid(setpoint); // Assuming setpid() calculates the speed based on PID
+            double speed =  elevatorpid(setpoint);// Assuming setpid() calculates the speed based on PID
             elevator.set(speed);
 
 
@@ -91,15 +95,19 @@ public Command elevatorcmd(double setpoint){
 
         @Override
         public void end(boolean interrupted) {
-            elevator.set(0);; // Stop the motor when the command ends or is interrupted
+            elevator.set(0); // Stop the motor when the command ends or is interrupted
         }
 
         @Override
         public boolean isFinished() {
-            return elevatorE.getPosition() == setpoint ; // Check if the setpoint is reached
+            return false ; // Check if the setpoint is reached
         }
     };
 }
+public boolean check(double setpoint){
+   return elevatorE.getPosition() >= setpoint-3 && elevatorE.getPosition() <= setpoint+3;
+}
+
 public Command wristcmd(double setpoint){
     
         

@@ -107,7 +107,7 @@ public class RobotContainer
   private final JoystickButton speakerButton = new JoystickButton(operator, XboxController.Button.kA.value);
   //private final JoystickButton intakehmanplayerButton = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
   private final JoystickButton AutoaimSpeaker = new JoystickButton(operator, XboxController.Button.kB.value);
-  private final JoystickButton AMPButton = new JoystickButton(operator, XboxController.Button.kB.value);
+   private final JoystickButton AMPButton = new JoystickButton(operator, XboxController.Button.kY.value);
   private final JoystickButton TrapButton = new JoystickButton(operator, XboxController.Button.kB.value);
 
 
@@ -196,6 +196,7 @@ public class RobotContainer
 
   }
 
+
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
    * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary predicate, or via the
@@ -203,6 +204,7 @@ public class RobotContainer
    * {@link CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller PS4}
    * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight joysticks}.
    */
+
   private void configureBindings()
   {
     /* 
@@ -254,12 +256,13 @@ driver_limelightButton.whileTrue(new teleoplimelight(
       () -> driver.getRightX(), () -> false));
 
 
-SmartDashboard.putNumber("boxpivencoder encoder", boxpivsub.encoder());
+
 
 
 //climbsub.shuffleboard();
-projectilesub.shuffleboard();
+projectilesub.elevatorshuffle();
 intakesub.shuffleboard();
+boxpivsub.encoder();
 
 
 
@@ -277,8 +280,17 @@ UnjamButton.whileTrue(new ParallelCommandGroup(projectilesub.ProjectilesUnjam(-0
 
 //AMPButton
 
-AMPButton.whileTrue(new SequentialCommandGroup(boxpivsub.boxpivcmdTO(10),projectilesub.elevatorcmd(10),new WaitCommand(.5),projectilesub.wristcmd(10),new WaitCommand(.5),projectilesub.Outtake(.3)));
+// AMPButton.whileTrue(new SequentialCommandGroup(boxpivsub.boxpivcmdTO(-7.3564453125)));
+// AMPButton.whileTrue(new SequentialCommandGroup(projectilesub.elevatorcmd(-13.21431827545166),new WaitCommand(.5)));
+// AMPButton.whileTrue(new SequentialCommandGroup(projectilesub.wristcmd(0),new WaitCommand(.5),projectilesub.Outtake(.3)));
+if (operator.getRawButtonPressed(4) == true){
+  
+  // if(projectilesub.check(-13.21431827545166) == true){
+  projectilesub.Outtake(.8);  
+
+}
 TrapButton.whileTrue(new SequentialCommandGroup(boxpivsub.boxpivcmdTO(10),projectilesub.elevatorcmd(10),new WaitCommand(0.5),projectilesub.wristcmd(10),new WaitCommand(1),projectilesub.Outtake(.3)));
+
 // intakegroundButton
 intakeButton.whileTrue(
 new SequentialCommandGroup(
