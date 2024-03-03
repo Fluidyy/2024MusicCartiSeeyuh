@@ -49,8 +49,8 @@ public class teleop extends Command
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize()
-  {
+  public void initialize(){
+  
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -65,7 +65,7 @@ public class teleop extends Command
     SmartDashboard.putNumber("omega", angVelocity);
 
     // Drive using raw values.
-    swerve.drive1(new Translation2d(xVelocity * swerve.maximumSpeed / 2, yVelocity * swerve.maximumSpeed / 2),
+    swerve.drive1(new Translation2d(xVelocity * swerve.maximumSpeed / 1.5, yVelocity * swerve.maximumSpeed / 1.5),
                  angVelocity * controller.config.maxAngularVelocity / 2,
                  driveMode.getAsBoolean());
   }

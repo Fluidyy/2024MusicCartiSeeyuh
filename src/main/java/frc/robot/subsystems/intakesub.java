@@ -46,8 +46,8 @@ public class intakesub extends SubsystemBase{
         FeederMotor.set(0.3);
         
     }
-    public void FeederMotorback (){
-        FeederMotor.set(-0.3);
+    public void FeederMotorback (double spped){
+        FeederMotor.set(spped);
     }
     public void intakepivmotor(double speed){
         intakepidmotor.set(speed);
@@ -76,7 +76,7 @@ public class intakesub extends SubsystemBase{
         return run(
             
 
-        () -> FeederMotorback()
+        () -> FeederMotorback(-0.3)
         );
     }
 
@@ -178,10 +178,10 @@ public class intakesub extends SubsystemBase{
             }
         };
     }
-public Command UnjamFeeder(){
+public Command UnjamFeeder(double spped){
         return run(
 
-        () -> FeederMotorback()
+        () -> FeederMotorback(spped)
         
 
         );

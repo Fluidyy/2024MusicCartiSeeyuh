@@ -53,7 +53,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.Boxpiv;
-//import frc.robot.subsystems.Climb;
+import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.projectiles;
 // import frc.robot.subsystems.outake;
 
@@ -80,7 +80,7 @@ public class RobotContainer
 
   private final intakesub intakesub = new intakesub();
   private final Boxpiv boxpivsub = new Boxpiv();
- // private final Climb climbsub = new Climb();
+ private final Climb climbsub = new Climb();
   private final projectiles projectilesub = new projectiles();
   // private final PhotonVision Vision = new PhotonVision();
 
@@ -102,14 +102,21 @@ public class RobotContainer
   private final JoystickButton driver_limelightButton = new JoystickButton(driver, XboxController.Button.kB.value);
   private final JoystickButton intakeButton = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
   private final POVButton UnjamButton = new POVButton(operator, 180);
-  private final JoystickButton climbButton = new JoystickButton(operator, XboxController.Button.kX.value);
+  private final JoystickButton climbButton = new JoystickButton(driver, XboxController.Button.kX.value);
   private final JoystickButton climbPivButton = new JoystickButton(operator, XboxController.Button.kB.value);
   private final JoystickButton speakerButton = new JoystickButton(operator, XboxController.Button.kA.value);
   //private final JoystickButton intakehmanplayerButton = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
   private final JoystickButton AutoaimSpeaker = new JoystickButton(operator, XboxController.Button.kB.value);
    private final JoystickButton AMPButton = new JoystickButton(operator, XboxController.Button.kY.value);
   private final JoystickButton TrapButton = new JoystickButton(operator, XboxController.Button.kB.value);
+  private final JoystickButton TestButtonHighSP = new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
 
+  private final JoystickButton TestButtonHighSP2 = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+
+  private final JoystickButton cButtonUp = new JoystickButton(driver, XboxController.Button.kY.value);
+
+  private final JoystickButton AddSP = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+  private final JoystickButton MinusSP = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
 
 
@@ -275,26 +282,40 @@ boxpivsub.encoder();
 
 // ));
 //UnjamButton
-UnjamButton.whileTrue(new ParallelCommandGroup(projectilesub.ProjectilesUnjam(-0.3), intakesub.UnjamFeeder()));
+
+ double x = -9.3564453125;
+
+if(operator.getRawButton(7)){
+  x=x+1;
+}
+if(operator.getRawButton(8)){
+  x=x-.5;
+}
+
+UnjamButton.whileTrue(new SequentialCommandGroup(intakesub.UnjamFeeder(0.3))).whileFalse(intakesub.UnjamFeeder(0));
 
 
 //AMPButton
 
-// AMPButton.whileTrue(new SequentialCommandGroup(boxpivsub.boxpivcmdTO(-7.3564453125)));
+speakerButton.whileTrue(new SequentialCommandGroup(boxpivsub.boxpivcmdTO(-9.3564453125))).whileFalse(boxpivsub.boxpivcmdTO(0));
+TestButtonHighSP.whileTrue(new SequentialCommandGroup(boxpivsub.boxpivcmdTO(-12.1764453125))).whileFalse(boxpivsub.boxpivcmdTO(0));
+AMPButton.whileTrue(new SequentialCommandGroup(projectilesub.Outtake(.56))).whileFalse(projectilesub.Outtake(0));
+
 // AMPButton.whileTrue(new SequentialCommandGroup(projectilesub.elevatorcmd(-13.21431827545166),new WaitCommand(.5)));
 // AMPButton.whileTrue(new SequentialCommandGroup(projectilesub.wristcmd(0),new WaitCommand(.5),projectilesub.Outtake(.3)));
-if (operator.getRawButtonPressed(4) == true){
+// if (operator.getRawButtonPressed(4) == true){
   
-  // if(projectilesub.check(-13.21431827545166) == true){
-  projectilesub.Outtake(.8);  
+//   new SequentialCommandGroup(projectilesub.Outtake(.8));  
 
-}
+// }
+TestButtonHighSP2.whileTrue(intakesub.intakepid(0));
+
 TrapButton.whileTrue(new SequentialCommandGroup(boxpivsub.boxpivcmdTO(10),projectilesub.elevatorcmd(10),new WaitCommand(0.5),projectilesub.wristcmd(10),new WaitCommand(1),projectilesub.Outtake(.3)));
 
 // intakegroundButton
 intakeButton.whileTrue(
 new SequentialCommandGroup(
-   intakesub.intakepid(-17.1428),intakesub.intakefeaderCommand(-0.50))
+   intakesub.intakefeaderCommand(-0.50))
 
    
   
@@ -321,18 +342,20 @@ climbPivButton.whileTrue(
 //someone else shoots out stabilizers and pulls the robot up
 
 
-  // climbButton.whileTrue(
-  //   new SequentialCommandGroup(climbsub.solenoidCommand(),new WaitCommand(1),climbsub.ClimbCmd1(),new WaitCommand(1),boxpivsub.boxpivcmdTO(10),new WaitCommand(1), projectilesub.elevatorcmd(10),new WaitCommand(.5),projectilesub.wristcmd(10),projectilesub.Outtake(0.3))
+
+    cButtonUp.whileTrue(
+    new SequentialCommandGroup(climbsub.ClimbCmd(.8))
     
 
 
+  ).whileFalse(new SequentialCommandGroup(climbsub.ClimbCmd(0)));
+
+
+  // speakerButton.whileTrue(
+  //   new SequentialCommandGroup(boxpivsub.boxpivcmdTO(48),new WaitCommand(1),projectilesub.Outtake(0.7))
+
+
   // );
-
-  speakerButton.whileTrue(
-    new SequentialCommandGroup(boxpivsub.boxpivcmdTO(48),new WaitCommand(1),projectilesub.Outtake(0.7))
-
-
-  );
   
     
   // var visionEst = Vision.getEstimatedGlobalPose();

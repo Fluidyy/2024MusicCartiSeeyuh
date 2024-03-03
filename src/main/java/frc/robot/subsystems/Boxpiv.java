@@ -20,7 +20,7 @@ public class Boxpiv extends SubsystemBase{
     private TalonFX boxpivL = new TalonFX(7);
 
       
-    private PIDController pid = new PIDController(0.03, 0, 0);
+    private PIDController pid = new PIDController(0.01, 0, 0);
     
 
     public Boxpiv(){}
@@ -143,4 +143,3 @@ public class Boxpiv extends SubsystemBase{
 
 
     
-
