@@ -43,6 +43,7 @@ import javax.swing.plaf.basic.BasicTreeUI.TreePageAction;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.PhotonVision;
 // import frc.robot.subsystems.PhotonVision;
 import frc.robot.subsystems.intakesub;
 
@@ -50,7 +51,7 @@ import frc.robot.subsystems.lookuptable.lookuptable;
 import frc.robot.commands.*;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.Boxpiv;
 import frc.robot.subsystems.Climb;
@@ -82,10 +83,11 @@ public class RobotContainer
   private final Boxpiv boxpivsub = new Boxpiv();
  private final Climb climbsub = new Climb();
   private final projectiles projectilesub = new projectiles();
+  private final PhotonVision vision = new PhotonVision();
   // private final PhotonVision Vision = new PhotonVision();
 
 
-                                                                  
+                                       
   // CommandJoystick rotationController = new CommandJoystick(1);
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
@@ -101,22 +103,19 @@ public class RobotContainer
 
   private final JoystickButton driver_limelightButton = new JoystickButton(driver, XboxController.Button.kB.value);
   private final JoystickButton intakeButton = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
-  private final POVButton UnjamButton = new POVButton(operator, 180);
+
   private final JoystickButton climbButton = new JoystickButton(driver, XboxController.Button.kX.value);
   private final JoystickButton climbPivButton = new JoystickButton(operator, XboxController.Button.kB.value);
   private final JoystickButton speakerButton = new JoystickButton(operator, XboxController.Button.kA.value);
   //private final JoystickButton intakehmanplayerButton = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
-  private final JoystickButton AutoaimSpeaker = new JoystickButton(operator, XboxController.Button.kB.value);
+  private final JoystickButton AutoaimSpeaker = new JoystickButton(operator, XboxController.Button.kX.value);
    private final JoystickButton AMPButton = new JoystickButton(operator, XboxController.Button.kY.value);
-  private final JoystickButton TrapButton = new JoystickButton(operator, XboxController.Button.kB.value);
-  private final JoystickButton TestButtonHighSP = new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
+  private final JoystickButton TrapButton = new JoystickButton(operator, XboxController.Button.kStart.value);
+  private final JoystickButton intakehmanplayerButton= new JoystickButton(operator,XboxController.Button.kRightStick.value);
+  private final JoystickButton UnjamButton= new JoystickButton(driver,XboxController.Button.kY.value);
 
-  private final JoystickButton TestButtonHighSP2 = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
-  private final JoystickButton cButtonUp = new JoystickButton(driver, XboxController.Button.kY.value);
 
-  private final JoystickButton AddSP = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-  private final JoystickButton MinusSP = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
 
 
@@ -133,6 +132,18 @@ public class RobotContainer
 
 
   {
+    var visionEst = vision.getEstimatedGlobalPose();
+  visionEst.ifPresent(
+          est -> {
+              var estPose = est.estimatedPose.toPose2d();
+              // Change our trust in the measurement based on the tags we can see
+              var estStdDevs = vision.getEstimationStdDevs(estPose);
+
+              drivebase.addVisionMeasurement(
+                     
+              est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+          });
+
     
 
 
@@ -283,22 +294,15 @@ boxpivsub.encoder();
 // ));
 //UnjamButton
 
- double x = -9.3564453125;
 
-if(operator.getRawButton(7)){
-  x=x+1;
-}
-if(operator.getRawButton(8)){
-  x=x-.5;
-}
 
 UnjamButton.whileTrue(new SequentialCommandGroup(intakesub.UnjamFeeder(0.3))).whileFalse(intakesub.UnjamFeeder(0));
 
 
 //AMPButton
 
-speakerButton.whileTrue(new SequentialCommandGroup(boxpivsub.boxpivcmdTO(-9.3564453125))).whileFalse(boxpivsub.boxpivcmdTO(0));
-TestButtonHighSP.whileTrue(new SequentialCommandGroup(boxpivsub.boxpivcmdTO(-12.1764453125))).whileFalse(boxpivsub.boxpivcmdTO(0));
+
+
 AMPButton.whileTrue(new SequentialCommandGroup(projectilesub.Outtake(.56))).whileFalse(projectilesub.Outtake(0));
 
 // AMPButton.whileTrue(new SequentialCommandGroup(projectilesub.elevatorcmd(-13.21431827545166),new WaitCommand(.5)));
@@ -308,29 +312,26 @@ AMPButton.whileTrue(new SequentialCommandGroup(projectilesub.Outtake(.56))).whil
 //   new SequentialCommandGroup(projectilesub.Outtake(.8));  
 
 // }
-TestButtonHighSP2.whileTrue(intakesub.intakepid(0));
 
 TrapButton.whileTrue(new SequentialCommandGroup(boxpivsub.boxpivcmdTO(10),projectilesub.elevatorcmd(10),new WaitCommand(0.5),projectilesub.wristcmd(10),new WaitCommand(1),projectilesub.Outtake(.3)));
 
 // intakegroundButton
 intakeButton.whileTrue(
 new SequentialCommandGroup(
-   intakesub.intakefeaderCommand(-0.50))
-
+   intakesub.intakepid(9), new  WaitUntilCommand(0.5),intakesub.intakefeaderCommand(.50))
+   ).whileFalse(intakesub.intakepid(0));
    
-  
-);
 //intakehumanplayer
-// intakehmanplayerButton.whileTrue(
-// new SequentialCommandGroup(
-//   boxpivsub.boxpivcmdTO(10),
-//   new ParallelCommandGroup(projectilesub.Outtake(-0.5),intakesub.feederbackCommand())
+intakehmanplayerButton.whileTrue(
+new SequentialCommandGroup(
+  boxpivsub.boxpivcmdTO(-10),
+  new ParallelCommandGroup(projectilesub.Outtake(-0.5),intakesub.intakefeaderCommand(-0.3))
   
   
 
-// )
+)
 
-// );
+);
 
 //Driver uses this button th pivot the box up and drive and lock into the chain
 climbPivButton.whileTrue(
@@ -343,12 +344,6 @@ climbPivButton.whileTrue(
 
 
 
-    cButtonUp.whileTrue(
-    new SequentialCommandGroup(climbsub.ClimbCmd(.8))
-    
-
-
-  ).whileFalse(new SequentialCommandGroup(climbsub.ClimbCmd(0)));
 
 
   // speakerButton.whileTrue(
@@ -358,29 +353,20 @@ climbPivButton.whileTrue(
   // );
   
     
-  // var visionEst = Vision.getEstimatedGlobalPose();
-  // visionEst.ifPresent(
-  //         est -> {
-  //             var estPose = est.estimatedPose.toPose2d();
-  //             // Change our trust in the measurement based on the tags we can see
-  //             var estStdDevs = Vision.getEstimationStdDevs(estPose);
-
-  //             drivebase.addVisionMeasurement(
-  //                     est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
-  //         });
-
+  
     
 		
     SmartDashboard.putData("Auto chooser",autoChooser);
-    //Auto Aim Speaker 
-    // speakerButton.whileTrue(
-    //   new SequentialCommandGroup(new ParallelDeadlineGroup(new autorotateodometry(
-    //     drivebase,
-    //     () -> driver.getLeftY(),
-    //     () -> driver.getLeftX(), 
+    // Auto Aim Speaker 
+    speakerButton.whileTrue(
+      new SequentialCommandGroup(new ParallelDeadlineGroup(new teleoplimelight(
+        limelight,
+        drivebase,
+        () -> driver.getLeftY(),
+        () -> driver.getLeftX(), 
   
-    //     () -> driver.getRightX(), () -> false),new LookUpShot(boxpivsub, projectilesub,() ->drivebase.calcDistToSpeaker()))
-    //   ,new ParallelCommandGroup(intakesub.feederCommand(),new LookUpShotoot(boxpivsub, projectilesub,() ->drivebase.calcDistToSpeaker()))));
+        () -> driver.getRightX(), () -> false),new LookUpShot(boxpivsub, projectilesub,() ->drivebase.calcDistToSpeaker()))
+      ));
       
         
     

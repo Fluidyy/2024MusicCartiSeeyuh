@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3496605095062044,
-      "y": 5.533495729028495
+      "x": 1.454549670868242,
+      "y": 5.539225686154654
     },
     "rotation": 0
   },
@@ -12,21 +12,33 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "2.2.0"
+            "name": "pivotdown"
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 0.3
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2 Piece (1st Part)"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "intake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
           }
         }
       ]

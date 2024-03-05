@@ -2,37 +2,31 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.69,
-      "y": 4.38
+      "x": 1.4127312870010371,
+      "y": 5.535354916863679
     },
-    "rotation": 120.0
+    "rotation": -0.4282322898337843
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "shoot"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "1.1.0"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.3
+            "pathName": "YourStupid"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": null
           }
         }
       ]

@@ -75,7 +75,7 @@ public class LookUpShot extends Command {
     @Override
     public void end(boolean interrupted) {
         // Stop the Shooter but keep the Arm control going
-    
+    m_shooter.lookupCommand(0, 0);
         // Don't stop the shooter in auto - copy this file for auto
     }
 

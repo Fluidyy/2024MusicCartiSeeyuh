@@ -18,6 +18,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
@@ -78,6 +79,7 @@ public class Robot extends TimedRobot
   @Override
   public void robotInit()
   {
+    PortForwarder.add(5800, "photonvision.local", 5800);
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
