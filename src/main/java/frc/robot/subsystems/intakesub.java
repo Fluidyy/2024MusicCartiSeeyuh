@@ -16,10 +16,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class intakesub extends SubsystemBase{
     private CANSparkMax intakemotorR = new CANSparkMax(16,MotorType.kBrushless);
     private CANSparkMax intakepidmotor = new CANSparkMax(17,MotorType.kBrushless);
-    private CANSparkMax FeederMotor = new CANSparkMax(20,MotorType.kBrushless);
+    private CANSparkMax FeederMotor = new CANSparkMax(21,MotorType.kBrushless);
 
-    private RelativeEncoder encoder = intakepidmotor.getEncoder();
-    private PIDController pid = new PIDController(0.01, 0, 0);
+    private RelativeEncoder pivencoder = intakepidmotor.getEncoder();
+    private PIDController pid = new PIDController(0.05, 0, 0);
 
     public intakesub(){}
     @Override
@@ -40,7 +40,7 @@ public class intakesub extends SubsystemBase{
      public void setmotorfeeder(double speed){
        
         intakemotorR.set(speed);
-        FeederMotor.set(speed);
+        FeederMotor.set(speed*0.50);
     }
     public void FeederMotor (){
         FeederMotor.set(0.3);
@@ -57,11 +57,11 @@ public class intakesub extends SubsystemBase{
 
     public double setpid(double setpoint){
         pid.setSetpoint(setpoint);
-        double move = pid.calculate(encoder.getPosition());
+        double move = pid.calculate(pivencoder.getPosition());
         return move;
     }
     public double encoder(){
-        return encoder.getPosition();
+        return pivencoder.getPosition();
     }
     public Command feederCommand(){
 
@@ -143,10 +143,42 @@ public class intakesub extends SubsystemBase{
     
             @Override
             public boolean isFinished() {
-                return encoder.getPosition() >= setpoint-1 && encoder.getPosition()<= setpoint+1; // Check if the setpoint is reached
+                return pivencoder.getPosition() >= setpoint-1 && pivencoder.getPosition()<= setpoint+1; // Check if the setpoint is reached
             }
         };
     }
+
+
+      public Command intakepidandfeeder(double setpoint,double speed){
+    
+        
+        return new Command() {
+            @Override
+            public void initialize() {
+                // Initialization code, such as resetting encoders or PID controllers
+            }
+    
+            @Override
+            public void execute() {
+                double move = setpid(setpoint); // Assuming setpid() calculates the speed based on PID
+                intakepivmotor(move);
+                setmotorfeeder(speed);
+            
+            
+            }
+    
+            @Override
+            public void end(boolean interrupted) {
+                setmotor(0); // Stop the motor when the command ends or is interrupted
+            }
+    
+            @Override
+            public boolean isFinished() {
+                return false; // Check if the setpoint is reached
+            }
+        };
+    }
+
 
      public Command intakefeaderCommand(double speed){
     
@@ -189,7 +221,7 @@ public Command UnjamFeeder(double spped){
 
     
 public void shuffleboard(){
-    SmartDashboard.putNumber("intake", encoder.getPosition());
+    SmartDashboard.putNumber("intake position", pivencoder.getPosition());
 }
 
 }

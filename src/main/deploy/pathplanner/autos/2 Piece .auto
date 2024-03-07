@@ -18,9 +18,40 @@
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "shoot"
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "TwoShootPiv"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "TwoShootS"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "runintake"
+                }
+              }
+            ]
           }
         },
         {
@@ -32,13 +63,26 @@
         {
           "type": "named",
           "data": {
-            "name": "intake"
+            "name": "shoot"
           }
         },
         {
-          "type": "named",
+          "type": "sequential",
           "data": {
-            "name": "shoot"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
+                }
+              }
+            ]
           }
         }
       ]

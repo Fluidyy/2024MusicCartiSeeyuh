@@ -19,12 +19,12 @@ import com.revrobotics.RelativeEncoder;
 public class projectiles extends SubsystemBase{
     private CANSparkFlex OutakeR = new CANSparkFlex(26, MotorType.kBrushless);
     private CANSparkFlex OutakeL = new CANSparkFlex(25, MotorType.kBrushless);
-    private CANSparkMax wrist = new CANSparkMax(19, MotorType.kBrushless);
-    private CANSparkMax elevator = new CANSparkMax(21, MotorType.kBrushless);
+    private CANSparkMax wrist = new CANSparkMax(20, MotorType.kBrushless);
+
     private PIDController wristpiPidController = new PIDController(0.01, 0, 0);
     private PIDController elevatorpidcController = new PIDController(0.05, 0, 0);
     private RelativeEncoder wristE = wrist.getEncoder();
-    private RelativeEncoder elevatorE = elevator.getEncoder();
+
      private RelativeEncoder OutakeE = OutakeL.getEncoder();
 
 
@@ -44,13 +44,11 @@ public void setoutakeLO(double leftv, double rightv){
 public void shuffleboard(){
     SmartDashboard.putNumber("wrist", wristE.getPosition());
    
-    SmartDashboard.putNumber("elevator",elevatorE.getPosition());
+
 
     SmartDashboard.putNumber("Outake Velocity", OutakeE.getVelocity());
 }
-public void elevatorshuffle(){
-    SmartDashboard.putNumber("elevator",elevatorE.getPosition());
-}
+
 
 public void setoutakeTE(double speed){
     OutakeL.set(speed);
@@ -65,48 +63,48 @@ public void Unjam(){
 
 }
 
-public double elevatorpid(double setpoint){
-    elevatorpidcController.setSetpoint(setpoint);
-    double move = elevatorpidcController.calculate(elevatorE.getPosition());
-    return move;
+// public double elevatorpid(double setpoint){
+//     elevatorpidcController.setSetpoint(setpoint);
+//     double move = elevatorpidcController.calculate(elevatorE.getPosition());
+//     return move;
 
-}
+// }
 
 public double wristpid(double setpoint){
      wristpiPidController.setSetpoint(setpoint);
     return wristpiPidController.calculate(wristE.getPosition());
 }
-public Command elevatorcmd(double setpoint){
+// public Command elevatorcmd(double setpoint){
     
         
-    return new Command() {
-        @Override
-        public void initialize() {
-            // Initialization code, such as resetting encoders or PID controllers
-        }
+//     return new Command() {
+//         @Override
+//         public void initialize() {
+//             // Initialization code, such as resetting encoders or PID controllers
+//         }
 
-        @Override
-        public void execute() {
-            double speed =  elevatorpid(setpoint);// Assuming setpid() calculates the speed based on PID
-            elevator.set(speed);
+//         @Override
+//         public void execute() {
+//             double speed =  elevatorpid(setpoint);// Assuming setpid() calculates the speed based on PID
+//             elevator.set(speed);
 
 
-        }
+//         }
 
-        @Override
-        public void end(boolean interrupted) {
-            elevator.set(0); // Stop the motor when the command ends or is interrupted
-        }
+//         @Override
+//         public void end(boolean interrupted) {
+//             elevator.set(0); // Stop the motor when the command ends or is interrupted
+//         }
 
-        @Override
-        public boolean isFinished() {
-            return false ; // Check if the setpoint is reached
-        }
-    };
-}
-public boolean check(double setpoint){
-   return elevatorE.getPosition() >= setpoint-3 && elevatorE.getPosition() <= setpoint+3;
-}
+//         @Override
+//         public boolean isFinished() {
+//             return false ; // Check if the setpoint is reached
+//         }
+//     };
+// }
+// public boolean check(double setpoint){
+//    return elevatorE.getPosition() >= setpoint-3 && elevatorE.getPosition() <= setpoint+3;
+// }
 
 public Command wristcmd(double setpoint){
     

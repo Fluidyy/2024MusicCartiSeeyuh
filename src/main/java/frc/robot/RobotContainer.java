@@ -34,6 +34,8 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.commands.swervedrive.drivebase.teleop;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import frc.robot.subsystems.swervedrive.candle;
+
 // import frc.robot.subsystems.intakesub;
 import java.io.File;
 
@@ -76,7 +78,7 @@ public class RobotContainer
                                                                          "swerve/neo"));
 
   private final Limelight limelight = new Limelight();
-
+  private final candle candle = new candle();
 
 
   private final intakesub intakesub = new intakesub();
@@ -101,18 +103,24 @@ public class RobotContainer
   // CommandJoystick driverController   = new CommandJoystick(3);//(OperatorConstants.DRIVER_CONTROLLER_PORT);
   XboxController driver = new XboxController(0);
 
-  private final JoystickButton driver_limelightButton = new JoystickButton(driver, XboxController.Button.kB.value);
+  private final JoystickButton driver_limelightButton = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
   private final JoystickButton intakeButton = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
 
-  private final JoystickButton climbButton = new JoystickButton(driver, XboxController.Button.kX.value);
-  private final JoystickButton climbPivButton = new JoystickButton(operator, XboxController.Button.kB.value);
-  private final JoystickButton speakerButton = new JoystickButton(operator, XboxController.Button.kA.value);
+  private final JoystickButton climbButton = new JoystickButton(driver, XboxController.Axis.kLeftTrigger.value);
+  private final JoystickButton climbPivButton = new JoystickButton(driver, XboxController.Axis.kRightTrigger.value);
+  private final JoystickButton subwoofer = new JoystickButton(operator, XboxController.Button.kB.value);
+    private final JoystickButton podium = new JoystickButton(operator, XboxController.Button.kA.value);
+
   //private final JoystickButton intakehmanplayerButton = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
-  private final JoystickButton AutoaimSpeaker = new JoystickButton(operator, XboxController.Button.kX.value);
+  private final JoystickButton AutoaimSpeaker = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
    private final JoystickButton AMPButton = new JoystickButton(operator, XboxController.Button.kY.value);
-  private final JoystickButton TrapButton = new JoystickButton(operator, XboxController.Button.kStart.value);
-  private final JoystickButton intakehmanplayerButton= new JoystickButton(operator,XboxController.Button.kRightStick.value);
-  private final JoystickButton UnjamButton= new JoystickButton(driver,XboxController.Button.kY.value);
+ 
+  
+
+
+  private final POVButton UnjamButton= new POVButton(operator, 270);
+    private final POVButton feaderf= new POVButton(operator, 90);
+  private final JoystickButton driverunjam= new JoystickButton(driver, XboxController.Button.kBack.value);
 
 
 
@@ -146,9 +154,21 @@ public class RobotContainer
 
     
 
+      
 
+    intakesub.shuffleboard();
+    boxpivsub.encoder();
+    projectilesub.shuffleboard();
 
     NamedCommands.registerCommand("intakedown", intakesub.intakepid(10));
+    NamedCommands.registerCommand("runintake", intakesub.intakeCommand(.5));
+    NamedCommands.registerCommand("TwoShootPiv",boxpivsub.boxpivcmdTO(10));
+    NamedCommands.registerCommand("TwoShootS",projectilesub.Outtake(.5));
+    NamedCommands.registerCommand("Feeder",intakesub.UnjamFeeder(-.5));
+    NamedCommands.registerCommand("intakestop", intakesub.intakeCommand(0));
+    NamedCommands.registerCommand("shootstop",projectilesub.Outtake(0));
+    NamedCommands.registerCommand("Feederstop",intakesub.UnjamFeeder(0));
+    
   //  NamedCommands.registerCommand("peiceintake", new ParallelCommandGroup(intakesub.intakeCommand(0.3),intakesub.feederCommand()));
     //Make Multiple of the below shoot speakers because you need to manually find the setpoints and speed for each angle
     NamedCommands.registerCommand("shootS", new SequentialCommandGroup(boxpivsub.boxpivcmdTO(10),projectilesub.Outtake(.5)));
@@ -225,45 +245,15 @@ public class RobotContainer
 
   private void configureBindings()
   {
-    /* 
-    Itake Button DONE
-    
-    SPEAKER SHOOT  DONE
-
-    Intake from Human Player DONE
-
-    Climb Button DONE
-
-    Auto Aim DONE
-
-    AMP DONE
-
-    TRAP  DONE
-
-    UNJAM Button DONE
-
-    //Shoot speaker:Run outake-> push note out
-    //Amp scoring: (Note must be in blue wheels) -> Extend elevator-> Flip Wrist ->Outtake
-    //Intake from human player: Pivot the box-> Intake with the blue wheels/feeder
-    // Trap: (Note must be in blue wheels) pivot box while hanging->extend elevator + pivot wrist -> Outake
     
 
 
-    
-    */
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-
+  
 
 
     new JoystickButton(driver, 1).onTrue((new InstantCommand(drivebase::zeroGyro)));
 
-    // new JoystickButton(driverXbox, 3).onTrue(new InstantCommand(drivebase::addFakeVisionReading));
-    // new JoystickButton(driverXbox,
-    //                    4).whileTrue(
-    //     Commands.deferredProxy(() -> drivebase.driveToPose(
-    //                                new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
-    //                           ));
-//    new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new oInstantCommand(drivebase::lock, drivebase)));
+
 
 driver_limelightButton.whileTrue(new teleoplimelight(
       limelight,
@@ -277,80 +267,59 @@ driver_limelightButton.whileTrue(new teleoplimelight(
 
 
 
-//climbsub.shuffleboard();
-projectilesub.elevatorshuffle();
-intakesub.shuffleboard();
-boxpivsub.encoder();
+//shuffleboards
 
 
 
 
 
-//  intakeButton.whileTrue(
 
-// new SequentialCommandGroup(new intakesub().intakeCommand(0.5).withTimeout(0.5),new Boxpiv().pidcCommand(10)
-  
 
-// ));
-//UnjamButton
+
+
 
 
 
 UnjamButton.whileTrue(new SequentialCommandGroup(intakesub.UnjamFeeder(0.3))).whileFalse(intakesub.UnjamFeeder(0));
 
 
-//AMPButton
+feaderf.whileTrue(intakesub.UnjamFeeder(-0.3)).whileFalse(intakesub.UnjamFeeder(0));
+driverunjam.whileTrue(intakesub.UnjamFeeder(-0.3)).whileFalse(intakesub.UnjamFeeder(0));
+
+subwoofer.whileTrue(new ParallelCommandGroup(boxpivsub.boxpivcmdTO(-10),projectilesub.Outtake(-1))).whileFalse(new ParallelCommandGroup(projectilesub.Outtake(0),boxpivsub.boxpivcmdTO(0)));
+podium.whileTrue(new ParallelCommandGroup(boxpivsub.boxpivcmdTO(5),projectilesub.Outtake(-1))).whileFalse(new ParallelCommandGroup(boxpivsub.boxpivcmdTO(0)) );
+
+AMPButton.whileTrue(new SequentialCommandGroup(boxpivsub.boxpivcmdTO(-4.0121), projectilesub.Outtake(.56))).whileFalse(new ParallelCommandGroup(projectilesub.Outtake(0),boxpivsub.boxpivcmdTO(0)));
 
 
 
-AMPButton.whileTrue(new SequentialCommandGroup(projectilesub.Outtake(.56))).whileFalse(projectilesub.Outtake(0));
-
-// AMPButton.whileTrue(new SequentialCommandGroup(projectilesub.elevatorcmd(-13.21431827545166),new WaitCommand(.5)));
-// AMPButton.whileTrue(new SequentialCommandGroup(projectilesub.wristcmd(0),new WaitCommand(.5),projectilesub.Outtake(.3)));
-// if (operator.getRawButtonPressed(4) == true){
-  
-//   new SequentialCommandGroup(projectilesub.Outtake(.8));  
-
-// }
-
-TrapButton.whileTrue(new SequentialCommandGroup(boxpivsub.boxpivcmdTO(10),projectilesub.elevatorcmd(10),new WaitCommand(0.5),projectilesub.wristcmd(10),new WaitCommand(1),projectilesub.Outtake(.3)));
 
 // intakegroundButton
 intakeButton.whileTrue(
-new SequentialCommandGroup(
-   intakesub.intakepid(9), new  WaitUntilCommand(0.5),intakesub.intakefeaderCommand(.50))
-   ).whileFalse(intakesub.intakepid(0));
+new ParallelCommandGroup(
+   intakesub.intakepidandfeeder(-17.999954223632812,-0.7))
+   ).whileFalse(intakesub.intakepidandfeeder(0,0));
    
-//intakehumanplayer
-intakehmanplayerButton.whileTrue(
-new SequentialCommandGroup(
-  boxpivsub.boxpivcmdTO(-10),
-  new ParallelCommandGroup(projectilesub.Outtake(-0.5),intakesub.intakefeaderCommand(-0.3))
-  
-  
 
-)
-
-);
 
 //Driver uses this button th pivot the box up and drive and lock into the chain
 climbPivButton.whileTrue(
-  new SequentialCommandGroup(boxpivsub.boxpivcmdTO(10), new WaitCommand(3),boxpivsub.boxpivcmdTO(0))
+  new ParallelCommandGroup(boxpivsub.boxpivcmdTO(10), intakesub.intakepid(4))
 
 
   );
-
-//someone else shoots out stabilizers and pulls the robot up
-
-
-
+climbButton.whileTrue(
+  new SequentialCommandGroup(climbsub.ClimbCmd(.5))
+);
 
 
-  // speakerButton.whileTrue(
-  //   new SequentialCommandGroup(boxpivsub.boxpivcmdTO(48),new WaitCommand(1),projectilesub.Outtake(0.7))
 
 
-  // );
+
+
+
+
+
   
     
   
@@ -358,7 +327,7 @@ climbPivButton.whileTrue(
 		
     SmartDashboard.putData("Auto chooser",autoChooser);
     // Auto Aim Speaker 
-    speakerButton.whileTrue(
+    AutoaimSpeaker.whileTrue(
       new SequentialCommandGroup(new ParallelDeadlineGroup(new teleoplimelight(
         limelight,
         drivebase,
