@@ -26,6 +26,7 @@ public class projectiles extends SubsystemBase{
     private RelativeEncoder wristE = wrist.getEncoder();
 
      private RelativeEncoder OutakeE = OutakeL.getEncoder();
+     
 
 
     

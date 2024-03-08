@@ -2,7 +2,7 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3842846515935527,
+      "x": 1.5599471997802752,
       "y": 5.562647359246215
     },
     "rotation": 0
@@ -12,15 +12,9 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "runintake"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "TwoPiecePartone"
+            "pathName": "New New Path"
           }
         }
       ]

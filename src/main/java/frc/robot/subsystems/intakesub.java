@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class intakesub extends SubsystemBase{
+    private Timer AutoTimer = new Timer();
+
     private CANSparkMax intakemotorR = new CANSparkMax(16,MotorType.kBrushless);
     private CANSparkMax intakepidmotor = new CANSparkMax(17,MotorType.kBrushless);
     private CANSparkMax FeederMotor = new CANSparkMax(21,MotorType.kBrushless);
@@ -236,5 +238,40 @@ public Command UnjamFeeder(double spped){
 public void shuffleboard(){
     SmartDashboard.putNumber("intake position", pivencoder.getPosition());
 }
+
+
+    public Command intakeAuto( double speed){
+    
+        
+        return new Command() {
+            @Override
+            public void initialize() {
+                AutoTimer.reset();
+                // Initialization code, such as resetting encoders or PID controllers
+            }
+    
+            @Override
+            public void execute() {
+                intakemotorR.set(speed);// Assuming setpid() calculates the speed based on PID
+                FeederMotor.set(speed);
+                
+            
+            
+            }
+    
+            @Override
+            public void end(boolean interrupted) {
+                intakemotorR.set(0);
+                FeederMotor.set(0);
+                // Stop the motor when the command ends or is interrupted
+                
+            }
+    
+            @Override
+            public boolean isFinished() {
+                return AutoTimer.getFPGATimestamp() > 3; // Check if the se tpoint is reached
+            }
+        };
+    }
 
 }

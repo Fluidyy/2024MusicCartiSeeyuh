@@ -83,10 +83,10 @@ public class Climb extends SubsystemBase{
 
     // }
     //This is for pulling up
-    public Command ClimbCmd(double speed){
+    public Command ClimbCmd1(double speed){
         return run(
 
-        () -> runClimbMotor(speed)
+        () -> ClimbMotor1.set(speed)
             
 
 
@@ -96,6 +96,22 @@ public class Climb extends SubsystemBase{
 
 
     }    
+
+    public Command ClimbCmd2(double speed){
+        return run(
+
+        () -> ClimbMotor2.set(-speed)
+            
+
+
+
+        );
+
+
+
+    }    
+
+    
 
     // public Command ClimbCmd1(){
     

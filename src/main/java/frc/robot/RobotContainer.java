@@ -45,7 +45,7 @@ import javax.swing.plaf.basic.BasicTreeUI.TreePageAction;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.LimelightHelpers;
+
 // import frc.robot.subsystems.PhotonVision;
 import frc.robot.subsystems.intakesub;
 
@@ -85,7 +85,7 @@ public class RobotContainer
   private final Boxpiv boxpivsub = new Boxpiv();
  private final Climb climbsub = new Climb();
   private final projectiles projectilesub = new projectiles();
-  private final LimelightHelpers limelighthelp = new LimelightHelpers();
+
 
   // private final PhotonVision Vision = new PhotonVision();
 
@@ -120,11 +120,11 @@ public class RobotContainer
   
 
 
-  private final POVButton UnjamButton= new POVButton(operator, 0);
-    private final POVButton feaderf= new POVButton(operator, 180);
+  private final POVButton UnjamButton= new POVButton(operator, 180);
+    private final POVButton feaderf= new POVButton(operator, 0);
       private final POVButton outakeunjam= new POVButton(operator, 90);
     private final POVButton outakeunjam1= new POVButton(operator, 270);
-  private final JoystickButton driverunjam= new JoystickButton(driver, XboxController.Button.kBack.value);
+  private final JoystickButton climb = new JoystickButton(driver, XboxController.Button.kBack.value);
 
 
 
@@ -158,19 +158,23 @@ public class RobotContainer
           //     visionest.poe.toPose2d(), est.timestampSeconds, estStdDevs);
           // });
 
-    
+      
 
       
 
     intakesub.shuffleboard();
     boxpivsub.encoder();
     projectilesub.shuffleboard();
+    // drivebase.llreset();
 
 
     NamedCommands.registerCommand("intakepivotdown", intakesub.intakepid(-17.999954223632812));
-    NamedCommands.registerCommand("runintake", intakesub.intakeCommand(.7));
-    NamedCommands.registerCommand("boxpivclose",boxpivsub.boxpivcmdTO(-11.04736328125));
+    NamedCommands.registerCommand("runintake", intakesub.intakefeaderCommand(-.7));
+    NamedCommands.registerCommand("boxpivclose",boxpivsub.boxpivcmdAU(-11.04736328125));
+      NamedCommands.registerCommand("boxpivclose1",boxpivsub.boxpivcmdAU1(-11.04736328125));
     NamedCommands.registerCommand("shoot",projectilesub.Outtake(0.8));
+    NamedCommands.registerCommand("'feeder",intakesub.UnjamFeeder(-0.5));
+
     
   //  NamedCommands.registerCommand("peiceintake", new ParallelCommandGroup(intakesub.intakeCommand(0.3),intakesub.feederCommand()));
     //Make Multiple of the below shoot speakers because you need to manually find the setpoints and speed for each angle
@@ -179,6 +183,7 @@ public class RobotContainer
     drivebase.odometrygetshuffleboard();
 
     configureBindings();
+     SmartDashboard.putData("Auto chooser",autoChooser);
    
     projectilesub.shuffleboard();
     AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
@@ -286,9 +291,9 @@ UnjamButton.whileTrue(new SequentialCommandGroup(intakesub.UnjamFeeder(0.3))).wh
 
 
 feaderf.whileTrue(intakesub.UnjamFeeder(-0.3)).whileFalse(intakesub.UnjamFeeder(0));
-driverunjam.whileTrue(intakesub.UnjamFeeder(-0.3)).whileFalse(intakesub.UnjamFeeder(0));
+climb.whileTrue(intakesub.UnjamFeeder(-0.3)).whileFalse(intakesub.UnjamFeeder(0));
 
-subwoofer.whileTrue(new ParallelCommandGroup(boxpivsub.boxpivcmdTO(-9.04736328125),projectilesub.Outtake(-1))).whileFalse(new ParallelCommandGroup(projectilesub.Outtake(0),boxpivsub.boxpivcmdTO(0)));
+subwoofer.whileTrue(new ParallelCommandGroup(boxpivsub.boxpivcmdTO(-12.04736328125),projectilesub.Outtake(-.75))).whileFalse(new ParallelCommandGroup(projectilesub.Outtake(0),boxpivsub.boxpivcmdTO(0)));
 podium.whileTrue(new ParallelCommandGroup(boxpivsub.boxpivcmdTO(-7),projectilesub.Outtake(-1))).whileFalse(new ParallelCommandGroup(boxpivsub.boxpivcmdTO(0)) );
 
 AMPButton.whileTrue(new SequentialCommandGroup(boxpivsub.boxpivcmdTOamp(-3.91650390625), new ParallelCommandGroup(boxpivsub.boxpivcmdTO(-3.91650390625),projectilesub.wristcmd(17.857131958007812)))).whileFalse(new SequentialCommandGroup(projectilesub.wristcmd(0),boxpivsub.boxpivcmdTOampslow(0)));
@@ -300,7 +305,7 @@ Outake.whileTrue(projectilesub.Outtake(0.3)).whileFalse(projectilesub.Outtake(0)
 // intakegroundButton
 intakeButton.whileTrue(
 new ParallelCommandGroup(
-   intakesub.intakepidandfeeder(-17.999954223632812,-0.5))
+   intakesub.intakepidandfeeder(-16.299954223632812,-0.5))
    ).whileFalse(intakesub.intakepidandfeeder(0,0));
    
 wrist.whileTrue(
@@ -314,8 +319,14 @@ climbPivButton.whileTrue(
 
   ).whileFalse(boxpivsub.boxpivcmdTO(-11));
 climbButton.whileTrue(
-  new SequentialCommandGroup(climbsub.ClimbCmd(-.75))
-).whileFalse(climbsub.ClimbCmd(0));
+  new SequentialCommandGroup(climbsub.ClimbCmd1(-0.75))
+).whileFalse(climbsub.ClimbCmd1(0));
+
+climbButton.whileTrue(
+  new SequentialCommandGroup(climbsub.ClimbCmd2(-0.75))
+).whileFalse(climbsub.ClimbCmd2(0));
+
+
 
 
 
@@ -331,7 +342,7 @@ outakeunjam1.whileTrue(projectilesub.Outtake(-0.5)).whileFalse(projectilesub.Out
   
     
 		
-    SmartDashboard.putData("Auto chooser",autoChooser);
+   
     // Auto Aim Speaker 
     AutoaimSpeaker.whileTrue(
       new SequentialCommandGroup(new ParallelDeadlineGroup(new teleoplimelight(

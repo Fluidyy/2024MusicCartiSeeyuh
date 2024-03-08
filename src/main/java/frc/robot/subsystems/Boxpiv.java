@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -21,6 +22,7 @@ public class Boxpiv extends SubsystemBase{
 
       
     private PIDController pid = new PIDController(0.03, 0, 0);
+        private Timer AutoTimer = new Timer();
     
 
     public Boxpiv(){}
@@ -125,6 +127,67 @@ public class Boxpiv extends SubsystemBase{
             public boolean isFinished() {
                 return false;
             }
+        };
+    }    
+    public Command boxpivcmdAU(double setpoint){
+    
+        
+        return new Command() {
+            @Override
+            public void initialize() {
+                // Initialization code, such as resetting encoders or PID controllers
+            }
+    
+            @Override
+            public void execute() {
+                double speed = setSetpoint(setpoint); // Assuming setpid() calculates the speed based on PID
+                boxpivotMotor(speed);
+            }
+    
+            @Override
+            public void end(boolean interrupted) {
+                boxpivotMotor(0); // Stop the motor when the command ends or is interrupted
+                //setSetpoint(0);
+                
+
+            }
+            
+    
+            @Override
+            public boolean isFinished() {
+            return boxpivR.getPosition().getValueAsDouble() >= setpoint-1 && boxpivR.getPosition().getValueAsDouble()<= setpoint+1;
+                        }
+        };
+    }    
+
+    public Command boxpivcmdAU1(double setpoint){
+    
+        
+        return new Command() {
+            @Override
+            public void initialize() {
+                AutoTimer.reset();
+            }
+    
+            @Override
+            public void execute() {
+                double speed = setSetpoint(setpoint); // Assuming setpid() calculates the speed based on PID
+                boxpivotMotor(speed);
+            }
+    
+            @Override
+            public void end(boolean interrupted) {
+                boxpivotMotor(0); // Stop the motor when the command ends or is interrupted
+                //setSetpoint(0);
+                
+
+            }
+            
+    
+            @Override
+            public boolean isFinished() {
+            return false;
+                        }
         };
     }    
 

@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.LimelightHelpers;
+// import frc.robot.subsystems.LimelightHelpers;
 
 import java.io.File;
 import java.util.function.DoubleSupplier;
@@ -412,6 +412,11 @@ public class SwerveSubsystem extends SubsystemBase
   {
     swerveDrive.resetOdometry(initialHolonomicPose);
   }
+  // public void llreset(){
+
+  //   Pose2d ll = LimelightHelpers.getBotPose2d_wpiBlue("limelight");
+  //   swerveDrive.resetOdometry(ll);
+  // }
   
 
   /**

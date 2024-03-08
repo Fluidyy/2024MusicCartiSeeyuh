@@ -14,10 +14,10 @@ public class lookuptable {
     public lookuptable() {
         shooterConfig = new ShooterConfig();
         shooterConfig.getShooterConfigs().add(new ShoterPreset(-9.04736328125, 100, 10, 1.68)); // Distance -> Bumper
-        shooterConfig.getShooterConfigs().add(new ShoterPreset(-8.5, 50, 40, 2)); // Distance -> Bumper
-        shooterConfig.getShooterConfigs().add(new ShoterPreset(-8.2, 50, 40, 2.5)); // Distance -> Bumper
-        shooterConfig.getShooterConfigs().add(new ShoterPreset(-7.9, 50, 40, 3)); // Distance -> Bumper
-        shooterConfig.getShooterConfigs().add(new ShoterPreset(-7.7, 70, 60, 3.5)); // Distance -> Bumper
+        shooterConfig.getShooterConfigs().add(new ShoterPreset(-8.77, 50, 40, 2)); // Distance -> Bumper
+        shooterConfig.getShooterConfigs().add(new ShoterPreset(-8.357, 50, 40, 2.5)); // Distance -> Bumper
+        shooterConfig.getShooterConfigs().add(new ShoterPreset(-7.937, 50, 40, 3)); // Distance -> Bumper
+        shooterConfig.getShooterConfigs().add(new ShoterPreset(-7.516, 70, 60, 3.5)); // Distance -> Bumper
 
         shooterConfig.getShooterConfigs().add(new ShoterPreset(-7, 1, 1, 4.115)); // Distance -> Bumper
 
