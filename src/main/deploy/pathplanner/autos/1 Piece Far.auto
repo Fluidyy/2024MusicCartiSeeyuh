@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.8404486039741327,
-      "y": 4.301987065512593
+      "x": 0.9095172036497934,
+      "y": 6.670053340106681
     },
-    "rotation": -55.954062643398295
+    "rotation": 61.189206257026925
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,25 @@
         {
           "type": "named",
           "data": {
-            "name": "pivotdown"
+            "name": "intakepivotdown"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "boxpivclose"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
           }
         },
         {
@@ -24,51 +42,34 @@
           }
         },
         {
-          "type": "path",
+          "type": "wait",
           "data": {
-            "pathName": "3PieceV3 (Part 1)"
+            "waitTime": 1.0
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "intake"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "runintake"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "path",
+          "type": "wait",
           "data": {
-            "pathName": "3 PieceV3 (Part 2)"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "3PieceV3 (Part 3)"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "intake"
+            "waitTime": 1.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "3PieceV3 (Part 4)"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shoot"
+            "pathName": "TwoPieceTopone"
           }
         }
       ]

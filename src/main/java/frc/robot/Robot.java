@@ -43,6 +43,7 @@ import java.io.File;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.LimelightHelpers;
 import frc.robot.commands.*;
 
 
@@ -53,6 +54,7 @@ import frc.robot.commands.*;
  */
 public class Robot extends TimedRobot
 {
+
 
   private static Robot   instance;
   private        Command m_autonomousCommand;
@@ -92,9 +94,10 @@ public class Robot extends TimedRobot
     UsbCamera camer1UsbCamera = new UsbCamera("camera1", 0);
     camer1UsbCamera.setResolution(100, 100);
     camer1UsbCamera.setFPS(30);
+    PortForwarder.add(5800, "limelight.local", 5800);
 
 
-    
+
   }
 
   /**
@@ -107,6 +110,7 @@ public class Robot extends TimedRobot
   @Override
   public void robotPeriodic()
   {
+
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
@@ -180,6 +184,10 @@ public class Robot extends TimedRobot
   @Override
   public void teleopPeriodic()
   {
+
+   
+   
+    
   }
 
   @Override

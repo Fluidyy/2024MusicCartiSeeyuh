@@ -30,6 +30,10 @@ public class intakesub extends SubsystemBase{
        
         intakemotorR.set(speed);
         
+    }public void setmotorf(double speed){
+       
+        intakemotorR.set(speed);
+        FeederMotor.set(speed);
     }
     public void setmotorstop(double speed){
        
@@ -104,6 +108,15 @@ public class intakesub extends SubsystemBase{
         return run(
 
         () -> setmotor(speed)
+        
+
+        );
+    }
+
+    public Command intakeCommandf(double speed){
+        return run(
+
+        () -> setmotorf(speed)
         
 
         );

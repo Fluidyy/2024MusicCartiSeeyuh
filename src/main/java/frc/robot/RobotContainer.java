@@ -150,13 +150,13 @@ public class RobotContainer
   //             var estPose = est.estimatedPose.toPose2d();
   //             // Change our trust in the measurement based on the tags we can see
   //             var estStdDevs = vision.getEstimationStdDevs(estPose);
-            var visionest = LimelightHelpers.getBotPose2d_wpiBlue("limelight");
+          //   var visionest = LimelightHelpers.getBotPose2d_wpiBlue("limelight");
 
     
-              drivebase.addVisionMeasurement(
+          //     drivebase.addVisionMeasurement(
                      
-              visionest., est.timestampSeconds, estStdDevs);
-          });
+          //     visionest.poe.toPose2d(), est.timestampSeconds, estStdDevs);
+          // });
 
     
 
@@ -166,18 +166,14 @@ public class RobotContainer
     boxpivsub.encoder();
     projectilesub.shuffleboard();
 
-    NamedCommands.registerCommand("intakedown", intakesub.intakepid(10));
-    NamedCommands.registerCommand("runintake", intakesub.intakeCommand(.5));
-    NamedCommands.registerCommand("TwoShootPiv",boxpivsub.boxpivcmdTO(10));
-    NamedCommands.registerCommand("TwoShootS",projectilesub.Outtake(.5));
-    NamedCommands.registerCommand("Feeder",intakesub.UnjamFeeder(-.5));
-    NamedCommands.registerCommand("intakestop", intakesub.intakeCommand(0));
-    NamedCommands.registerCommand("shootstop",projectilesub.Outtake(0));
-    NamedCommands.registerCommand("Feederstop",intakesub.UnjamFeeder(0));
+
+    NamedCommands.registerCommand("intakepivotdown", intakesub.intakepid(-17.999954223632812));
+    NamedCommands.registerCommand("runintake", intakesub.intakeCommand(.7));
+    NamedCommands.registerCommand("boxpivclose",boxpivsub.boxpivcmdTO(-11.04736328125));
+    NamedCommands.registerCommand("shoot",projectilesub.Outtake(0.8));
     
   //  NamedCommands.registerCommand("peiceintake", new ParallelCommandGroup(intakesub.intakeCommand(0.3),intakesub.feederCommand()));
     //Make Multiple of the below shoot speakers because you need to manually find the setpoints and speed for each angle
-    NamedCommands.registerCommand("shootS", new SequentialCommandGroup(boxpivsub.boxpivcmdTO(10),projectilesub.Outtake(.5)));
     
     autoChooser = AutoBuilder.buildAutoChooser();
     drivebase.odometrygetshuffleboard();
