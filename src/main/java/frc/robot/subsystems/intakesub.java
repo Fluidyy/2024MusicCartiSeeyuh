@@ -40,7 +40,7 @@ public class intakesub extends SubsystemBase{
      public void setmotorfeeder(double speed){
        
         intakemotorR.set(speed);
-        FeederMotor.set(speed*0.50);
+        FeederMotor.set(speed*0.7);
     }
     public void FeederMotor (){
         FeederMotor.set(0.3);

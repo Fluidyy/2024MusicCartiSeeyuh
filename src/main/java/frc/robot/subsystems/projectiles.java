@@ -17,11 +17,11 @@ import com.revrobotics.RelativeEncoder;
 
 
 public class projectiles extends SubsystemBase{
-    private CANSparkFlex OutakeR = new CANSparkFlex(26, MotorType.kBrushless);
-    private CANSparkFlex OutakeL = new CANSparkFlex(25, MotorType.kBrushless);
+    private CANSparkMax OutakeR = new CANSparkMax(26, MotorType.kBrushless);
+    private CANSparkMax OutakeL = new CANSparkMax(25, MotorType.kBrushless);
     private CANSparkMax wrist = new CANSparkMax(20, MotorType.kBrushless);
 
-    private PIDController wristpiPidController = new PIDController(0.01, 0, 0);
+    private PIDController wristpiPidController = new PIDController(0.03, 0, 0);
     private PIDController elevatorpidcController = new PIDController(0.05, 0, 0);
     private RelativeEncoder wristE = wrist.getEncoder();
 

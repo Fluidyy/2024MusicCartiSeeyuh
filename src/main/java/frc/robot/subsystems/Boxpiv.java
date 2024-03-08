@@ -20,7 +20,7 @@ public class Boxpiv extends SubsystemBase{
     private TalonFX boxpivL = new TalonFX(7);
 
       
-    private PIDController pid = new PIDController(0.01, 0, 0);
+    private PIDController pid = new PIDController(0.03, 0, 0);
     
 
     public Boxpiv(){}
@@ -119,6 +119,7 @@ public class Boxpiv extends SubsystemBase{
                 
 
             }
+            
     
             @Override
             public boolean isFinished() {
@@ -127,7 +128,66 @@ public class Boxpiv extends SubsystemBase{
         };
     }    
 
+     public Command boxpivcmdTOamp(double setpoint){
     
+        
+        return new Command() {
+            @Override
+            public void initialize() {
+                // Initialization code, such as resetting encoders or PID controllers
+            }
+    
+            @Override
+            public void execute() {
+                double speed = setSetpoint(setpoint); // Assuming setpid() calculates the speed based on PID
+                boxpivotMotor(speed);
+            }
+    
+            @Override
+            public void end(boolean interrupted) {
+                boxpivotMotor(0); // Stop the motor when the command ends or is interrupted
+                //setSetpoint(0);
+                
+
+            }
+    
+            @Override
+            public boolean isFinished() {
+                return boxpivR.getPosition().getValueAsDouble() >= setpoint-1 && boxpivR.getPosition().getValueAsDouble()<= setpoint+1;
+            }
+        };
+    }    
+
+     public Command boxpivcmdTOampslow(double setpoint){
+    
+        
+        return new Command() {
+            @Override
+            public void initialize() {
+                // Initialization code, such as resetting encoders or PID controllers
+            }
+    
+            @Override
+            public void execute() {
+                pid.setP(0.01);
+                double speed = setSetpoint(setpoint); // Assuming setpid() calculates the speed based on PID
+                boxpivotMotor(speed);
+            }
+    
+            @Override
+            public void end(boolean interrupted) {
+                boxpivotMotor(0); // Stop the motor when the command ends or is interrupted
+                //setSetpoint(0);
+                
+
+            }
+    
+            @Override
+            public boolean isFinished() {
+                return boxpivR.getPosition().getValueAsDouble() >= setpoint-1 && boxpivR.getPosition().getValueAsDouble()<= setpoint+1;
+            }
+        };
+    }    
 
     public Command speed(double speed){
 
