@@ -1,26 +1,29 @@
-package frc.robot.subsystems.lookuptable;
+package frc.lib.util;
 
 import java.util.Collections;
 import java.util.List;
+import frc.robot.subsystems.lookuptable.ShooterConfig;
+import frc.robot.subsystems.lookuptable.ShoterPreset;
 
-public class lookuptable {
+
+public class visionlookuptable {
     ShooterConfig shooterConfig;
 
-    private static lookuptable instance = new lookuptable();
+    private static visionlookuptable instance = new visionlookuptable();
 
-    public static lookuptable getInstance() {
+    public static visionlookuptable getInstance() {
         return instance;
     }
-    public lookuptable() {
+    public visionlookuptable() {
         shooterConfig = new ShooterConfig();
-        shooterConfig.getShooterConfigs().add(new ShoterPreset(-9.04736328125, 100, 10, 1.68)); // Distance -> Bumper
-        shooterConfig.getShooterConfigs().add(new ShoterPreset(-8.77, 100, 100, 2)); // Distance -> Bumper
-        shooterConfig.getShooterConfigs().add(new ShoterPreset(-8.357, 100, 100, 2.5)); // Distance -> Bumper
-        shooterConfig.getShooterConfigs().add(new ShoterPreset(-7.937, 100, 100, 3)); // Distance -> Bumper
-        shooterConfig.getShooterConfigs().add(new ShoterPreset(-7.516, 100, 100, 3.5)); // Distance -> Bumper
-
-        shooterConfig.getShooterConfigs().add(new ShoterPreset(-7, 1, 1, 4.115)); // Distance -> Bumper
-
+        shooterConfig.getShooterConfigs().add(new ShoterPreset(1, 50, 40, 1)); // Distance -> Bumper
+        shooterConfig.getShooterConfigs().add(new ShoterPreset(10, 50, 40, 1.5)); // Distance -> Bumper
+        shooterConfig.getShooterConfigs().add(new ShoterPreset(21, 50, 40, 2)); // Distance -> Bumper
+        shooterConfig.getShooterConfigs().add(new ShoterPreset(25, 50, 40, 2.5)); // Distance -> Bumper
+        shooterConfig.getShooterConfigs().add(new ShoterPreset(29, 70, 60, 3)); // Distance -> Bumper
+        shooterConfig.getShooterConfigs().add(new ShoterPreset(32, 70, 60, 3.5)); 
+        shooterConfig.getShooterConfigs().add(new ShoterPreset(34.35, 70, 60, 4)); // Distance -> Bumper
+        shooterConfig.getShooterConfigs().add(new ShoterPreset(38.3, 70, 60, 5)); // Distance -> Bumper
 
         Collections.sort(shooterConfig.getShooterConfigs());
     }
@@ -102,7 +105,7 @@ public class lookuptable {
      * @param PercentIn: Amount of percentage between the two values the new preset needs to be
      * 
      * @return new interpolated shooter preset
-     */ 
+     */
     private ShoterPreset interpolateShooterPreset(ShoterPreset StartPreset, ShoterPreset EndPreset, double PercentIn) {
         double armAngle = StartPreset.getArmAngle() + (EndPreset.getArmAngle() - StartPreset.getArmAngle()) * PercentIn;
         double leftShooter = StartPreset.getLeftShooter() + (EndPreset.getLeftShooter() - StartPreset.getLeftShooter()) * PercentIn;

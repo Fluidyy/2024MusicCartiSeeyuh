@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class intakesub extends SubsystemBase{
     private Timer AutoTimer = new Timer();
+    private Timer AutoTimer3 = new Timer();
 
     private CANSparkMax intakemotorR = new CANSparkMax(16,MotorType.kBrushless);
     private CANSparkMax intakepidmotor = new CANSparkMax(17,MotorType.kBrushless);
@@ -50,6 +51,10 @@ public class intakesub extends SubsystemBase{
     }
     public void FeederMotor (){
         FeederMotor.set(0.3);
+        
+    }
+    public void FeederMotor1 (double speed){
+        FeederMotor.set(speed);
         
     }
     public void FeederMotorback (double spped){
@@ -240,36 +245,70 @@ public void shuffleboard(){
 }
 
 
-    public Command intakeAuto( double speed){
+   public Command intakefeaderCommandAU1(double speed){
     
         
         return new Command() {
             @Override
             public void initialize() {
                 AutoTimer.reset();
+                AutoTimer.start();
                 // Initialization code, such as resetting encoders or PID controllers
             }
     
             @Override
             public void execute() {
-                intakemotorR.set(speed);// Assuming setpid() calculates the speed based on PID
-                FeederMotor.set(speed);
-                
+                // Assuming setpid() calculates the speed based on PID
+                setmotorfeeder(speed);
+
             
             
             }
     
             @Override
             public void end(boolean interrupted) {
-                intakemotorR.set(0);
-                FeederMotor.set(0);
+                setmotorstop(0);
                 // Stop the motor when the command ends or is interrupted
-                
             }
     
             @Override
             public boolean isFinished() {
-                return AutoTimer.getFPGATimestamp() > 3; // Check if the se tpoint is reached
+                return AutoTimer.get() > 2; // Check if the setpoint is reached
+            }
+        };}
+
+       public Command intakefeaderCommandAU2(double speed){
+    
+        
+        return new Command() {
+            @Override
+            public void initialize() {
+                AutoTimer3.reset();
+                AutoTimer3.start();
+              
+
+                // Initialization code, such as resetting encoders or PID controllers
+            }
+    
+            @Override
+            public void execute() {
+                // Assuming setpid() calculates the speed based on PID
+                setmotorfeeder(speed);
+
+            
+            
+            }
+    
+            @Override
+            public void end(boolean interrupted) {
+                setmotorstop(0);
+                
+                // Stop the motor when the command ends or is interrupted
+            }
+    
+            @Override
+            public boolean isFinished() {
+               return AutoTimer.get() > 8; // Check if the setpoint is reached
             }
         };
     }

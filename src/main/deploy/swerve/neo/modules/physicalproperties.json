@@ -4,12 +4,12 @@
     "angle": 28.125
   },
   "currentLimit": {
-    "drive": 40,
-    "angle": 20
+    "drive": 43,
+    "angle": 23
   },
   "rampRate": {
     "drive": 0.25,
-    "angle": 0.25
+    "angle": 0.255
   },
   "wheelGripCoefficientOfFriction": 1.19,
   "optimalVoltage": 12

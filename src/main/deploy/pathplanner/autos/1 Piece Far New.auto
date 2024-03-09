@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.8207147183525153,
-      "y": 4.341454836755828
+      "x": 0.9095172036497934,
+      "y": 6.670053340106681
     },
-    "rotation": -64.79887635452499
+    "rotation": 58.650419134756994
   },
   "command": {
     "type": "sequential",
@@ -24,31 +24,26 @@
           }
         },
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "boxpivclose"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "boxpivclose"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shoot"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
@@ -60,7 +55,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Feeder"
+                  "name": "shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "boxpivclose"
                 }
               }
             ]
@@ -75,7 +76,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "TwoPieceBottomone"
+            "pathName": "TwoPieceTopone"
           }
         }
       ]

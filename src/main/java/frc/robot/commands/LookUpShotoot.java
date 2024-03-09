@@ -6,11 +6,13 @@ package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.lookuptable.setpoint;
 
 import frc.robot.subsystems.Boxpiv;
+import frc.robot.subsystems.intakesub;
 import frc.robot.subsystems.lookuptable.ShoterPreset;
 import frc.robot.subsystems.lookuptable.lookuptable;
 import frc.robot.Constants;
@@ -26,26 +28,31 @@ public class LookUpShotoot extends Command {
     lookuptable m_lookuLookuptable;
     DoubleSupplier m_distance;
     projectiles m_shooter;
+    intakesub s_intake;
+    Timer timer = new Timer();
 
     
 
     /** Constructor - Creates a new prepareToShoot. */
-    public LookUpShotoot(Boxpiv armSub, projectiles shooter,DoubleSupplier distance) {
+    public LookUpShotoot(Boxpiv armSub, projectiles shooter,DoubleSupplier distance,intakesub intake) {
         
         m_Boxpiv = armSub;
         m_shooter = shooter;
+        s_intake = intake;
        
         m_lookuLookuptable = new lookuptable();
         m_distance = distance;
         m_setpoints = Constants.LOOKUP;
 
 
-        addRequirements(armSub);
+
+        addRequirements(armSub,shooter);
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
+        timer.reset();
         
     }
 
@@ -62,19 +69,27 @@ public class LookUpShotoot extends Command {
 
        
 
-        m_Boxpiv.boxpivcmdLO(m_setpoints);
+        m_shooter.setShooterSetpoints(m_setpoints);
+        m_Boxpiv.lookuptable(m_setpoints);
 
-        // Bring Shooter to requested speed
-        m_shooter.setoutakeLO(m_setpoints.shooterLeft, m_setpoints.shooterRight);
-
-
-
+        if (m_Boxpiv.isarmthere(m_setpoints)) {
+            timer.start();
+            if(timer.get() <= 3){
+                s_intake.FeederMotor1(-0.5);
+                
+            }
+        }
     }
+
+
+    
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
         // Stop the Shooter but keep the Arm control going
+        m_shooter.setoutakeTE(0);
+        
     
         // Don't stop the shooter in auto - copy this file for auto
     }

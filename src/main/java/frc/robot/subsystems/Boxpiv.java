@@ -12,16 +12,23 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.subsystems.lookuptable.setpoint;
 import frc.robot.Constants;
+import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
+import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 
 
 public class Boxpiv extends SubsystemBase{
     private TalonFX boxpivR = new TalonFX(6);
     private TalonFX boxpivL = new TalonFX(7);
+    private double m_armSetpoint;
+
+    private double m_tolerance;
 
       
     private PIDController pid = new PIDController(0.03, 0, 0);
+        private TrapezoidProfile.State m_tpState = new TrapezoidProfile.State(0.0, 0.0);
         private Timer AutoTimer = new Timer();
     
 
@@ -72,6 +79,17 @@ public class Boxpiv extends SubsystemBase{
 
 
     // }
+    public void lookuptable(setpoint setpoint){
+
+        double speed = setSetpoint(setpoint.arm);
+        boxpivL.set(speed);
+        boxpivR.set(speed);
+
+
+    }
+    public boolean isarmthere(setpoint setpoint){
+       return boxpivR.getPosition().getValueAsDouble() >= setpoint.arm-1 && boxpivR.getPosition().getValueAsDouble()<= setpoint.arm+1;
+    }
     public Command boxpivcmdLO(setpoint setpoint){
     
         
@@ -129,6 +147,7 @@ public class Boxpiv extends SubsystemBase{
             }
         };
     }    
+
     public Command boxpivcmdAU(double setpoint){
     
         
@@ -146,7 +165,8 @@ public class Boxpiv extends SubsystemBase{
     
             @Override
             public void end(boolean interrupted) {
-                boxpivotMotor(0); // Stop the motor when the command ends or is interrupted
+                boxpivotMotor(0);
+                 // Stop the motor when the command ends or is interrupted
                 //setSetpoint(0);
                 
 
@@ -155,7 +175,7 @@ public class Boxpiv extends SubsystemBase{
     
             @Override
             public boolean isFinished() {
-            return boxpivR.getPosition().getValueAsDouble() >= setpoint-1 && boxpivR.getPosition().getValueAsDouble()<= setpoint+1;
+            return false;
                         }
         };
     }    
@@ -167,6 +187,7 @@ public class Boxpiv extends SubsystemBase{
             @Override
             public void initialize() {
                 AutoTimer.reset();
+                
             }
     
             @Override

@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.Trajectory;
@@ -27,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 // import frc.robot.subsystems.LimelightHelpers;
+import frc.robot.subsystems.LimelightHelpers;
 
 import java.io.File;
 import java.util.function.DoubleSupplier;
@@ -41,6 +43,7 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 public class SwerveSubsystem extends SubsystemBase
 {
 
@@ -102,6 +105,25 @@ public class SwerveSubsystem extends SubsystemBase
   {
     swerveDrive = new SwerveDrive(driveCfg, controllerCfg, maximumSpeed);
   }
+  // private Rotation2d gyrorotation(){
+  //   Rotation2d gyroAngle = new Rotation2d(Units.degreesToRadians(swerveDrive.getGyro().getAngle()));
+  //   return gyroAngle;
+
+  // }
+
+  //  private final SwerveDrivePoseEstimator m_poseEstimator =
+  //     new SwerveDrivePoseEstimator(
+  //         swerveDrive.kinematics,
+  //         gyrorotation(),
+  //         new SwerveModulePosition[] {
+  //           m_frontLeft.getPosition(),
+  //           m_frontRight.getPosition(),
+  //           m_backLeft.getPosition(),
+  //           m_backRight.getPosition()
+  //         },
+  //         new Pose2d(),
+  //         VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
+  //         VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
 
   /**
    * Setup AutoBuilder for PathPlanner.
@@ -120,7 +142,7 @@ public class SwerveSubsystem extends SubsystemBase
                                                           swerveDrive.swerveController.config.headingPIDF.i,
                                                           swerveDrive.swerveController.config.headingPIDF.d),
                                          // Rotation PID constants
-                                         4.5,
+                                         3,
                                          // Max module speed, in m/s
                                          swerveDrive.swerveDriveConfiguration.getDriveBaseRadiusMeters(),
                                          // Drive base radius in meters. Distance from robot center to furthest module.
@@ -137,6 +159,8 @@ public class SwerveSubsystem extends SubsystemBase
         this // Reference to this subsystem to set requirements
                                   );
   }
+
+  
 
   /**
    * Get the path follower with events.
@@ -352,8 +376,10 @@ public class SwerveSubsystem extends SubsystemBase
         //System.out.println(Math.toDegrees(Math.atan(yDiff / xDiff)));
         return Math.toDegrees(Math.atan(yDiff / xDiff));
     }
+    
 
     public double calcDistToSpeaker() {
+      swerveDrive.updateOdometry();
         if(getSpeakerPos()!=null) {
             return getRadiusToSpeakerInMeters(swerveDrive.getPose(),getSpeakerPos());
         } else {
@@ -428,6 +454,7 @@ public class SwerveSubsystem extends SubsystemBase
   {
     return swerveDrive.getPose();
   }
+  
   public double getYaw(){
 
     return swerveDrive.getYaw().getDegrees();
@@ -587,17 +614,25 @@ public class SwerveSubsystem extends SubsystemBase
   public void addVisionMeasurement(Pose2d visionMeasurement, double timestampSeconds, Matrix<N3, N1> stdDevs)
      {
     swerveDrive.addVisionMeasurement(visionMeasurement, timestampSeconds, stdDevs);
-} 
+} }
     
 
   /**
    * Add a fake vision reading for testing purposes.
    */
-  public void addFakeVisionReading()
-  {
-    swerveDrive.addVisionMeasurement(new Pose2d(3, 3, Rotation2d.fromDegrees(65)), Timer.getFPGATimestamp());
-  }
+//   public void addFakeVisionReading()
+//   {
+//     swerveDrive.addVisionMeasurement(new Pose2d(3, 3, Rotation2d.fromDegrees(65)), Timer.getFPGATimestamp());
+//   }
+
+//    LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+//     if(limelightMeasurement.tagCount >= 2)
+//     {
+//       m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+//       m_poseEstimator.addVisionMeasurement(
+//           limelightMeasurement.pose,
+//           limelightMeasurement.timestampSeconds);
 
   
-}
+// }
 
