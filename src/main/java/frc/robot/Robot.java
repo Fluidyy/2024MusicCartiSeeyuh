@@ -90,11 +90,11 @@ public class Robot extends TimedRobot
     // immediately when disabled, but then also let it be pushed more 
     disabledTimer = new Timer();
 
-    CameraServer.startAutomaticCapture(0);
-    UsbCamera camer1UsbCamera = new UsbCamera("camera1", 0);
-    camer1UsbCamera.setResolution(100, 100);
-    camer1UsbCamera.setFPS(30);
-    PortForwarder.add(5800, "limelight.local", 5800);
+    // CameraServer.startAutomaticCapture(0);
+    // UsbCamera camer1UsbCamera = new UsbCamera("camera1", 0);
+    // camer1UsbCamera.setResolution(100, 100);
+    // camer1UsbCamera.setFPS(30);
+    // PortForwarder.add(5800, "limelight.local", 5800);
 
 
 

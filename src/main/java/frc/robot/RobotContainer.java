@@ -303,13 +303,13 @@ UnjamButton.whileTrue(new SequentialCommandGroup(intakesub.UnjamFeeder(0.3))).wh
 feaderf.whileTrue(intakesub.UnjamFeeder(-0.3)).whileFalse(intakesub.UnjamFeeder(0));
 climb.whileTrue(intakesub.UnjamFeeder(-0.3)).whileFalse(intakesub.UnjamFeeder(0));
 
-subwoofer.whileTrue(new ParallelCommandGroup(boxpivsub.boxpivcmdTO(-13.04736328125),projectilesub.Outtake(-.75))).whileFalse(new ParallelCommandGroup(projectilesub.Outtake(0),boxpivsub.boxpivcmdTO(0)));
+subwoofer.whileTrue(new ParallelCommandGroup(boxpivsub.boxpivcmdTO(-13.54736328125),projectilesub.Outtake(-.75))).whileFalse(new ParallelCommandGroup(projectilesub.Outtake(0),boxpivsub.boxpivcmdTO(0)));
 podium.whileTrue(new ParallelCommandGroup(boxpivsub.boxpivcmdTO(-7),projectilesub.Outtake(-1))).whileFalse(new ParallelCommandGroup(boxpivsub.boxpivcmdTO(0)) );
 
 AMPButton.whileTrue(new SequentialCommandGroup(boxpivsub.boxpivcmdTOamp(-3.91650390625), new ParallelCommandGroup(boxpivsub.boxpivcmdTO(-3.91650390625),projectilesub.wristcmd(17.857131958007812)))).whileFalse(new SequentialCommandGroup(projectilesub.wristcmd(0),boxpivsub.boxpivcmdTOampslow(0)));
 Outake.whileTrue(projectilesub.Outtake(0.3)).whileFalse(projectilesub.Outtake(0));
 
-
+climbButton.whileTrue(m_vision.resetodome());
 
 
 // intakegroundButton
