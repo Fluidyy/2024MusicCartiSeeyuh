@@ -56,7 +56,7 @@ public class SwerveSubsystem extends SubsystemBase
   /**
    * Maximum speed of the robot in meters per second, used to limit acceleration.
    */
-  public        double      maximumSpeed = Units.feetToMeters(15);
+  public        double      maximumSpeed = Units.feetToMeters(17);
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.

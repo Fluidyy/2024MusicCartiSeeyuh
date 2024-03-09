@@ -36,7 +36,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.commands.swervedrive.drivebase.teleop;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
-import frc.robot.subsystems.swervedrive.candle;
+
 
 // import frc.robot.subsystems.intakesub;
 import java.io.File;
@@ -80,14 +80,15 @@ public class RobotContainer
                                                                          "swerve/neo"));
 
   private final Limelight limelight = new Limelight();
-  private final candle candle = new candle();
+
 
 
   private final intakesub intakesub = new intakesub();
   private final Boxpiv boxpivsub = new Boxpiv();
 //  private final Climb climbsub = new Climb();
   private final projectiles projectilesub = new projectiles();
-   limek1 m_vision = new limek1(drivebase);
+  private final limek1 lime = new limek1(drivebase);
+
 
 
   // private final PhotonVision Vision = new PhotonVision();
@@ -149,9 +150,9 @@ public class RobotContainer
 
 
   {
-    m_vision.useLimelight(true);
-    m_vision.setAlliance(Alliance.Blue);
-    m_vision.trustLL(true);
+    // m_vision.useLimelight(true);
+    // m_vision.setAlliance(Alliance.Blue);
+    // m_vision.trustLL(true);
   //   var visionEst = vision.getEstimatedGlobalPose();
   // visionEst.ifPresent(
   //         est -> {
@@ -181,7 +182,7 @@ public class RobotContainer
     NamedCommands.registerCommand("runintake", intakesub.intakefeaderCommandAU1(-.50));
     NamedCommands.registerCommand("runintake2", intakesub.intakefeaderCommandAU2(-.75));
     NamedCommands.registerCommand("boxpivclose",boxpivsub.boxpivcmdAU(-13.04736328125));
-    NamedCommands.registerCommand("boxpivmid",boxpivsub.boxpivcmdAU1(-10.5));
+    NamedCommands.registerCommand("boxpivmid",boxpivsub.boxpivcmdAU1(-11.25));
     NamedCommands.registerCommand("shoot",projectilesub.OtakeAU(-1));
 
     
@@ -269,6 +270,7 @@ public class RobotContainer
 
 
     new JoystickButton(driver, 1).onTrue((new InstantCommand(drivebase::zeroGyro)));
+  
 
 
 
@@ -309,7 +311,7 @@ podium.whileTrue(new ParallelCommandGroup(boxpivsub.boxpivcmdTO(-7),projectilesu
 AMPButton.whileTrue(new SequentialCommandGroup(boxpivsub.boxpivcmdTOamp(-3.91650390625), new ParallelCommandGroup(boxpivsub.boxpivcmdTO(-3.91650390625),projectilesub.wristcmd(17.857131958007812)))).whileFalse(new SequentialCommandGroup(projectilesub.wristcmd(0),boxpivsub.boxpivcmdTOampslow(0)));
 Outake.whileTrue(projectilesub.Outtake(0.3)).whileFalse(projectilesub.Outtake(0));
 
-climbButton.whileTrue(m_vision.resetodome());
+climbButton.whileTrue(lime.resetodome());
 
 
 // intakegroundButton
@@ -340,7 +342,7 @@ climbPivButton.whileTrue(
 
 
 
-outakeunjam.whileTrue(projectilesub.Outtake(0.5)).whileFalse(projectilesub.Outtake(0));
+outakeunjam.whileTrue(new ParallelCommandGroup(projectilesub.Outtake(0.5),intakesub.UnjamFeeder(1))).whileFalse(new ParallelCommandGroup(intakesub.UnjamFeeder(0),projectilesub.Outtake(0)));
 outakeunjam1.whileTrue(projectilesub.Outtake(-0.5)).whileFalse(projectilesub.Outtake(0));
 
 

@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.swervedrive.*;
 import frc.lib.util.rectangle;
 
+
 public class limek1 extends SubsystemBase {
     SwerveSubsystem drivetrain;
     Alliance alliance;
@@ -26,6 +27,7 @@ public class limek1 extends SubsystemBase {
     private int fieldError = 0;
     private int distanceError = 0;
     private Pose2d botpose;
+     boolean hi = false;
     private static final rectangle field = new rectangle(new Translation2d(0.0, 0.0), new Translation2d(16.54, 8.02));
 
     /** Creates a new Limelight. */
@@ -37,33 +39,7 @@ public class limek1 extends SubsystemBase {
 
     @Override
     public void periodic() {
-        Pose2d currentPose = drivetrain.getPose(); // Get the current robot pose
-        Translation2d currentPosition = currentPose.getTranslation(); // Extract the translation component
         
-            Double targetDistance = LimelightHelpers.getTargetPose3d_CameraSpace(ll).getTranslation().getDistance(new Translation3d());
-            Double confidence = 1 - ((targetDistance - 1) / 6);
-            LimelightHelpers.Results result = LimelightHelpers.getLatestResults(ll).targetingResults;
-            if (result.valid) {
-                if (alliance == Alliance.Blue) {
-                    botpose = LimelightHelpers.getBotPose2d_wpiBlue(ll);
-                } else if (alliance == Alliance.Red) {
-                    botpose = LimelightHelpers.getBotPose2d_wpiRed(ll);
-                }
-                if (field.isPoseWithinArea(botpose)) {
-                    if (currentPosition.getDistance(botpose.getTranslation()) < 0.5 || trust
-                            || result.targets_Fiducials.length > 1) {
-                        drivetrain.addVisionMeasurement(botpose,
-                                Timer.getFPGATimestamp() - (result.latency_capture / 1000.0) - (result.latency_pipeline / 1000.0),
-                                VecBuilder.fill(confidence, confidence, .01));
-                    } else {
-                        distanceError++;
-                        SmartDashboard.putNumber("Limelight Error", distanceError);
-                    }
-                } else {
-                    fieldError++;
-                    SmartDashboard.putNumber("Field Error", fieldError);
-                }
-            }
         }
     
 
@@ -84,22 +60,20 @@ public class limek1 extends SubsystemBase {
         return new Command() {
             @Override
             public void initialize() {
-                boolean 121 = false;
+               hi = false;
                 // Initialization code, such as resetting encoders or PID controllers
             }
     
             @Override
             public void execute() {
-                if (command == false) {
-                    
-                }
-
-                Pose2d currentPose = drivetrain.getPose(); // Get the current robot pose
+                if (hi == false) {
+                    Pose2d currentPose = drivetrain.getPose(); // Get the current robot pose
         Translation2d currentPosition = currentPose.getTranslation(); // Extract the translation component
         
             Double targetDistance = LimelightHelpers.getTargetPose3d_CameraSpace(ll).getTranslation().getDistance(new Translation3d());
             Double confidence = 1 - ((targetDistance - 1) / 6);
             LimelightHelpers.Results result = LimelightHelpers.getLatestResults(ll).targetingResults;
+            hi = true;
             if (result.valid) {
                 if (alliance == Alliance.Blue) {
                     botpose = LimelightHelpers.getBotPose2d_wpiBlue(ll);
@@ -121,6 +95,10 @@ public class limek1 extends SubsystemBase {
                     SmartDashboard.putNumber("Field Error", fieldError);
                 }
             }
+                    
+                }
+
+                
         
                 
             }
@@ -137,7 +115,7 @@ public class limek1 extends SubsystemBase {
     
             @Override
             public boolean isFinished() {
-            return false;
+            return hi;
                         }
         };
     }    
