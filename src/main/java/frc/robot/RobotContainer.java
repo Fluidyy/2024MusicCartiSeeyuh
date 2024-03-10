@@ -111,7 +111,7 @@ public class RobotContainer
   private final JoystickButton driver_limelightButton = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
   private final JoystickButton intakeButton = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
 
-  private final JoystickButton climbButton = new JoystickButton(driver, XboxController.Button.kLeftStick.value);
+
   private final JoystickButton climbPivButton = new JoystickButton(driver, XboxController.Button.kRightStick.value);
   private final JoystickButton subwoofer = new JoystickButton(operator, XboxController.Button.kB.value);
     private final JoystickButton podium = new JoystickButton(operator, XboxController.Button.kA.value);
@@ -311,7 +311,7 @@ podium.whileTrue(new ParallelCommandGroup(boxpivsub.boxpivcmdTO(-7),projectilesu
 AMPButton.whileTrue(new SequentialCommandGroup(boxpivsub.boxpivcmdTOamp(-3.91650390625), new ParallelCommandGroup(boxpivsub.boxpivcmdTO(-3.91650390625),projectilesub.wristcmd(17.857131958007812)))).whileFalse(new SequentialCommandGroup(projectilesub.wristcmd(0),boxpivsub.boxpivcmdTOampslow(0)));
 Outake.whileTrue(projectilesub.Outtake(0.3)).whileFalse(projectilesub.Outtake(0));
 
-climbButton.whileTrue(lime.resetodome());
+
 
 
 // intakegroundButton

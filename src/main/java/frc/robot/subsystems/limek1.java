@@ -54,71 +54,46 @@ public class limek1 extends SubsystemBase {
     public void trustLL(boolean trust) {
         this.trust = trust;
     }
-     public Command resetodome(){
-    
-        
-        return new Command() {
-            @Override
-            public void initialize() {
-               hi = false;
-                // Initialization code, such as resetting encoders or PID controllers
-            }
-    
-            @Override
-            public void execute() {
-                if (hi == false) {
-                    Pose2d currentPose = drivetrain.getPose(); // Get the current robot pose
+   
+    public void performVisionMeasurement() {
+        Pose2d currentPose = drivetrain.getPose(); // Get the current robot pose
         Translation2d currentPosition = currentPose.getTranslation(); // Extract the translation component
         
-            Double targetDistance = LimelightHelpers.getTargetPose3d_CameraSpace(ll).getTranslation().getDistance(new Translation3d());
-            Double confidence = 1 - ((targetDistance - 1) / 6);
-            LimelightHelpers.Results result = LimelightHelpers.getLatestResults(ll).targetingResults;
-            hi = true;
-            if (result.valid) {
-                if (alliance == Alliance.Blue) {
-                    botpose = LimelightHelpers.getBotPose2d_wpiBlue(ll);
-                } else if (alliance == Alliance.Red) {
-                    botpose = LimelightHelpers.getBotPose2d_wpiRed(ll);
-                }
-                if (field.isPoseWithinArea(botpose)) {
-                    if (currentPosition.getDistance(botpose.getTranslation()) < 0.5 || trust
-                            || result.targets_Fiducials.length > 1) {
-                        drivetrain.addVisionMeasurement(botpose,
-                                Timer.getFPGATimestamp() - (result.latency_capture / 1000.0) - (result.latency_pipeline / 1000.0),
-                                VecBuilder.fill(confidence, confidence, .01));
-                    } else {
-                        distanceError++;
-                        SmartDashboard.putNumber("Limelight Error", distanceError);
-                    }
+        Double targetDistance = LimelightHelpers.getTargetPose3d_CameraSpace(ll).getTranslation().getDistance(new Translation3d());
+        Double confidence = 1 - ((targetDistance - 1) / 6);
+        LimelightHelpers.Results result = LimelightHelpers.getLatestResults(ll).targetingResults;
+    
+        if (result.valid) {
+            if (alliance == Alliance.Blue) {
+                botpose = LimelightHelpers.getBotPose2d_wpiBlue(ll);
+            } else if (alliance == Alliance.Red) {
+                botpose = LimelightHelpers.getBotPose2d_wpiRed(ll);
+            }
+            if (field.isPoseWithinArea(botpose)) {
+                if (currentPosition.getDistance(botpose.getTranslation()) < 0.5 || trust || result.targets_Fiducials.length > 1) {
+                    drivetrain.addVisionMeasurement(botpose, Timer.getFPGATimestamp() - (result.latency_capture / 1000.0) - (result.latency_pipeline / 1000.0), VecBuilder.fill(confidence, confidence, .01));
                 } else {
-                    fieldError++;
-                    SmartDashboard.putNumber("Field Error", fieldError);
+                    distanceError++;
+                    SmartDashboard.putNumber("Limelight Error", distanceError);
                 }
+            } else {
+                fieldError++;
+                SmartDashboard.putNumber("Field Error", fieldError);
             }
-                    
-                }
+        }
+    }
+ 
 
-                
-        
-                
-            }
     
-            @Override
-            public void end(boolean interrupted) {
-                
-                 // Stop the motor when the command ends or is interrupted
-                //setSetpoint(0);
-                
+    public Command resetodom(){
 
-            }
+        return runOnce(
             
-    
-            @Override
-            public boolean isFinished() {
-            return hi;
-                        }
-        };
-    }    
 
+        () -> performVisionMeasurement()
+        );
+    }    
+        
+      
 }
 
