@@ -57,6 +57,10 @@ public class underthebumper extends SubsystemBase{
         underbumpL.set(speed);
         underbumpR.set(speed);
     }
+       public void intakeCjiommand(double speed){
+        underbumpL.set(speed);
+        underbumpR.set(speed);
+    }
     public Command feedercmd(double speed){
         return(
             run(
