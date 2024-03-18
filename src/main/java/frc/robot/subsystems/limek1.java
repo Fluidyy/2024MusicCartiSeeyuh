@@ -16,13 +16,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.swervedrive.*;
 import frc.lib.util.rectangle;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 
 public class limek1 extends SubsystemBase {
     SwerveSubsystem drivetrain;
     Alliance alliance;
     private String ll = "limelight";
-    private Boolean enable = false;
+    private Boolean enable = true;
     private Boolean trust = false;
     private int fieldError = 0;
     private int distanceError = 0;
@@ -35,28 +36,16 @@ public class limek1 extends SubsystemBase {
         this.drivetrain = drivetrain;
         SmartDashboard.putNumber("Field Error", fieldError);
         SmartDashboard.putNumber("Limelight Error", distanceError);
+
+        
+       
     }
 
     @Override
     public void periodic() {
-        
-        }
-    
+      Pose2d currentPose = drivetrain.getPose(); // Get the current robot pose
+      Rotation2d cRotation2d = currentPose.getRotation();
 
-    public void setAlliance(Alliance alliance) {
-        this.alliance = alliance;
-    }
-
-    public void useLimelight(boolean enable) {
-        this.enable = enable;
-    }
-
-    public void trustLL(boolean trust) {
-        this.trust = trust;
-    }
-   
-    public void performVisionMeasurement() {
-        Pose2d currentPose = drivetrain.getPose(); // Get the current robot pose
         Translation2d currentPosition = currentPose.getTranslation(); // Extract the translation component
         
         Double targetDistance = LimelightHelpers.getTargetPose3d_CameraSpace(ll).getTranslation().getDistance(new Translation3d());
@@ -72,6 +61,8 @@ public class limek1 extends SubsystemBase {
             if (field.isPoseWithinArea(botpose)) {
                 if (currentPosition.getDistance(botpose.getTranslation()) < 0.5 || trust || result.targets_Fiducials.length > 1) {
                     drivetrain.addVisionMeasurement(botpose, Timer.getFPGATimestamp() - (result.latency_capture / 1000.0) - (result.latency_pipeline / 1000.0), VecBuilder.fill(confidence, confidence, .01));
+                    drivetrain.resetOdometry(new Pose2d(botpose.getX(),botpose.getY(),cRotation2d));
+                    
                 } else {
                     distanceError++;
                     SmartDashboard.putNumber("Limelight Error", distanceError);
@@ -82,18 +73,23 @@ public class limek1 extends SubsystemBase {
             }
         }
     }
- 
-
-    
-    public Command resetodom(){
-
-        return runOnce(
-            
-
-        () -> performVisionMeasurement()
-        );
-    }    
         
-      
+        
+    
+
+    public void setAlliance(Alliance alliance) {
+        this.alliance = alliance;
+    }
+
+    public void useLimelight(boolean enable) {
+        this.enable = enable;
+    }
+
+    public void trustLL(boolean trust) {
+        this.trust = trust;
+    }
+   
+   
+
 }
 

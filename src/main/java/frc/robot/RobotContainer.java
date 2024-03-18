@@ -48,8 +48,9 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import frc.robot.subsystems.Limelight;
 
+
 // import frc.robot.subsystems.PhotonVision;
-import frc.robot.subsystems.intakesub;
+
 import frc.robot.subsystems.limek1;
 import frc.robot.subsystems.lookuptable.lookuptable;
 import frc.robot.commands.*;
@@ -61,6 +62,7 @@ import frc.robot.subsystems.Boxpiv;
 // import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.projectiles;
 // import frc.robot.subsystems.outake;
+import frc.robot.subsystems.underthebumper;
 
 
 
@@ -83,11 +85,11 @@ public class RobotContainer
 
 
 
-  private final intakesub intakesub = new intakesub();
   private final Boxpiv boxpivsub = new Boxpiv();
 //  private final Climb climbsub = new Climb();
   private final projectiles projectilesub = new projectiles();
   private final limek1 lime = new limek1(drivebase);
+  private final underthebumper newintake = new underthebumper();
 
 
 
@@ -171,16 +173,16 @@ public class RobotContainer
 
       
 
-    intakesub.shuffleboard();
+    
     boxpivsub.encoder();
-    projectilesub.shuffleboard();
+    // projectilesub.shuffleboard();
     // drivebase.llreset();
 
     // Command boxpivintake = new ParallelCommandGroup(boxpivsub.boxpivcmdAU(-11.04736328125), intakesub.intakefeaderCommandAU1(-0.25));
 
-    NamedCommands.registerCommand("intakepivotdown", intakesub.intakepid(-17.999954223632812));
-    NamedCommands.registerCommand("runintake", intakesub.intakefeaderCommandAU1(-.50));
-    NamedCommands.registerCommand("runintake2", intakesub.intakefeaderCommandAU2(-.75));
+
+    NamedCommands.registerCommand("runintake", newintake.intakeandfeederauto(-.50,-0.5,3));
+    NamedCommands.registerCommand("runintake2", newintake.intakeandfeederauto(-.75,-0.5,2));
     NamedCommands.registerCommand("boxpivclose",boxpivsub.boxpivcmdAU(-13.04736328125));
     NamedCommands.registerCommand("boxpivmid",boxpivsub.boxpivcmdAU1(-11.25));
     NamedCommands.registerCommand("shoot",projectilesub.OtakeAU(-1));
@@ -195,7 +197,7 @@ public class RobotContainer
     configureBindings();
      SmartDashboard.putData("Auto chooser",autoChooser);
    
-    projectilesub.shuffleboard();
+    // projectilesub.shuffleboard();
     AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
                                                                    () -> MathUtil.applyDeadband(driver.getLeftY(),
                                                                                                 OperatorConstants.LEFT_Y_DEADBAND),
@@ -229,10 +231,10 @@ public class RobotContainer
         () -> MathUtil.applyDeadband(driver.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
         () -> driver.getRawAxis(2));
 
-    Command driveFieldOrientedDirectAngleSim = drivebase.simDriveCommand(
-        () -> MathUtil.applyDeadband(driver.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(driver.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> driver.getRawAxis(2));
+    // Command driveFieldOrientedDirectAngleSim = drivebase.simDriveCommand(
+    //     () -> MathUtil.applyDeadband(driver.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+    //     () -> MathUtil.applyDeadband(driver.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+    //     () -> driver.getRawAxis(2));
 
     // drivebase.setDefaultCommand(
     //     !RobotBase.isSimulation() ? driveFieldOrientedDirectAngle : driveFieldOrientedDirectAngleSim);
@@ -245,6 +247,7 @@ public class RobotContainer
       
 
     drivebase.setDefaultCommand(closedFieldRelOperator);
+    newintake.intakeconsCommand();
     
 
 
@@ -299,16 +302,16 @@ driver_limelightButton.whileTrue(new teleoplimelight(
 
 
 
-UnjamButton.whileTrue(new SequentialCommandGroup(intakesub.UnjamFeeder(0.3))).whileFalse(intakesub.UnjamFeeder(0));
+UnjamButton.whileTrue(new SequentialCommandGroup(newintake.feedercmd(-0.7))).whileFalse(newintake.feedercmd(0));
 
 
-feaderf.whileTrue(intakesub.UnjamFeeder(-0.3)).whileFalse(intakesub.UnjamFeeder(0));
-climb.whileTrue(intakesub.UnjamFeeder(-0.3)).whileFalse(intakesub.UnjamFeeder(0));
+feaderf.whileTrue(newintake.feedercmd(0.7)).whileFalse(newintake.feedercmd(0));
 
-subwoofer.whileTrue(new ParallelCommandGroup(boxpivsub.boxpivcmdTO(-13.54736328125),projectilesub.Outtake(-.75))).whileFalse(new ParallelCommandGroup(projectilesub.Outtake(0),boxpivsub.boxpivcmdTO(0)));
+
+subwoofer.whileTrue(new ParallelCommandGroup(boxpivsub.boxpivcmdTO(-3.43359375),projectilesub.Outtake(0.65))).whileFalse(new ParallelCommandGroup(projectilesub.Outtake(0),boxpivsub.boxpivcmdTO(0)));
 podium.whileTrue(new ParallelCommandGroup(boxpivsub.boxpivcmdTO(-7),projectilesub.Outtake(-1))).whileFalse(new ParallelCommandGroup(boxpivsub.boxpivcmdTO(0)) );
 
-AMPButton.whileTrue(new SequentialCommandGroup(boxpivsub.boxpivcmdTOamp(-3.91650390625), new ParallelCommandGroup(boxpivsub.boxpivcmdTO(-3.91650390625),projectilesub.wristcmd(17.857131958007812)))).whileFalse(new SequentialCommandGroup(projectilesub.wristcmd(0),boxpivsub.boxpivcmdTOampslow(0)));
+// AMPButton.whileTrue(new SequentialCommandGroup(boxpivsub.boxpivcmdTOamp(-3.91650390625), new ParallelCommandGroup(boxpivsub.boxpivcmdTO(-3.91650390625),projectilesub.wristcmd(17.857131958007812)))).whileFalse(new SequentialCommandGroup(projectilesub.wristcmd(0),boxpivsub.boxpivcmdTOampslow(0)));
 Outake.whileTrue(projectilesub.Outtake(0.3)).whileFalse(projectilesub.Outtake(0));
 
 
@@ -317,12 +320,12 @@ Outake.whileTrue(projectilesub.Outtake(0.3)).whileFalse(projectilesub.Outtake(0)
 // intakegroundButton
 intakeButton.whileTrue(
 new ParallelCommandGroup(
-   intakesub.intakepidandfeeder(-17.79954223632812,-0.5))
-   ).whileFalse(intakesub.intakepidandfeeder(0,0));
+   newintake.intakeandfeeder(0.7, 0.7)))
+   .whileFalse(newintake.intakeandfeeder(0,0));
    
-wrist.whileTrue(
-  projectilesub.wristcmd(17.857131958007812)
-).whileFalse(projectilesub.wristcmd(17.857131958007812));
+// wrist.whileTrue(
+//   projectilesub.wristcmd(17.857131958007812)
+// ).whileFalse(projectilesub.wristcmd(17.857131958007812));
 
 //Driver uses this button th pivot the box up and drive and lock into the chain
 climbPivButton.whileTrue(
@@ -342,7 +345,7 @@ climbPivButton.whileTrue(
 
 
 
-outakeunjam.whileTrue(new ParallelCommandGroup(projectilesub.Outtake(0.5),intakesub.UnjamFeeder(1))).whileFalse(new ParallelCommandGroup(intakesub.UnjamFeeder(0),projectilesub.Outtake(0)));
+
 outakeunjam1.whileTrue(projectilesub.Outtake(-0.5)).whileFalse(projectilesub.Outtake(0));
 
 
@@ -358,7 +361,7 @@ outakeunjam1.whileTrue(projectilesub.Outtake(-0.5)).whileFalse(projectilesub.Out
     // Auto Aim Speaker 
     AutoaimSpeaker.whileTrue(
       ((
-        new LookUpShotoot(boxpivsub, projectilesub,() ->drivebase.calcDistToSpeaker(),intakesub))
+        new LookUpShotoot(boxpivsub, projectilesub,() ->drivebase.calcDistToSpeaker(), newintake))
       ));
       
         

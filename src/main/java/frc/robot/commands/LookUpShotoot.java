@@ -12,11 +12,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.lookuptable.setpoint;
 
 import frc.robot.subsystems.Boxpiv;
-import frc.robot.subsystems.intakesub;
+
 import frc.robot.subsystems.lookuptable.ShoterPreset;
 import frc.robot.subsystems.lookuptable.lookuptable;
 import frc.robot.Constants;
 import frc.robot.subsystems.projectiles;
+import frc.robot.subsystems.underthebumper;
 
 
 public class LookUpShotoot extends Command {
@@ -28,13 +29,13 @@ public class LookUpShotoot extends Command {
     lookuptable m_lookuLookuptable;
     DoubleSupplier m_distance;
     projectiles m_shooter;
-    intakesub s_intake;
+    underthebumper s_intake;
     Timer timer = new Timer();
 
     
 
     /** Constructor - Creates a new prepareToShoot. */
-    public LookUpShotoot(Boxpiv armSub, projectiles shooter,DoubleSupplier distance,intakesub intake) {
+    public LookUpShotoot(Boxpiv armSub, projectiles shooter,DoubleSupplier distance,underthebumper intake) {
         
         m_Boxpiv = armSub;
         m_shooter = shooter;
@@ -76,7 +77,11 @@ public class LookUpShotoot extends Command {
             timer.start();
             if(timer.get() <= 3){
                 s_intake.FeederMotor1(-0.5);
+            
                 
+            }
+            else{
+                s_intake.FeederMotor1(0);
             }
         }
     }

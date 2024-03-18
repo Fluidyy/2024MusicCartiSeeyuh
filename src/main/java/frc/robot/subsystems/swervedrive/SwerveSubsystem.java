@@ -23,6 +23,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -238,18 +239,7 @@ public class SwerveSubsystem extends SubsystemBase
    * @param rotation     Rotation as a value between [-1, 1] converted to radians.
    * @return Drive command.
    */
-  public Command simDriveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier rotation)
-  {
-    // swerveDrive.setHeadingCorrection(true); // Normally you would want heading correction for this kind of control.
-    return run(() -> {
-      // Make the robot move
-      driveFieldOriented(swerveDrive.swerveController.getTargetSpeeds(translationX.getAsDouble(),
-                                                                      translationY.getAsDouble(),
-                                                                      rotation.getAsDouble() * Math.PI,
-                                                                      swerveDrive.getOdometryHeading().getRadians(),
-                                                                      swerveDrive.getMaximumVelocity()));
-    });
-  }
+  
 
   /**
    * Command to drive the robot using translative values and heading as angular velocity.
@@ -295,9 +285,12 @@ public class SwerveSubsystem extends SubsystemBase
 
   public void odometrygetshuffleboard(){
     Pose2d pose = swerveDrive.getPose();
-    SmartDashboard.putNumber("Robot x",pose.getTranslation().getX());
-    SmartDashboard.putNumber("Robot Y", pose.getTranslation().getY());
-    SmartDashboard.putNumber("Robot Y", pose.getRotation().getDegrees());
+
+    
+    
+    SmartDashboard.putNumber("Robot x",pose.getX());
+    SmartDashboard.putNumber("Robot Y", pose.getY());
+    SmartDashboard.putNumber("Rotation", pose.getRotation().getDegrees());
 
 
   }

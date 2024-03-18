@@ -52,7 +52,7 @@ public class teleoplimelight extends Command {
         double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), OperatorConstants.LEFT_X_DEADBAND);
         double distFactor = 0.2 * (s_limelight.getRZ() > 5 ? 5 : s_limelight.getRZ());
         /* Get rotation */
-        PIDController rotController = new PIDController((1.0-(0.75*distFactor))*0.2, 0.0001, 0.000005);
+        PIDController rotController = new PIDController((1.0-(0.75*distFactor))*0.1, 0.0001, 0.000005);
         rotController.enableContinuousInput(-180, 180);
         double rotate = rotController.calculate(s_Swerve.getYaw(), s_Swerve.getHeading().getDegrees() + 15*s_limelight.getRX());
         /* Drive */

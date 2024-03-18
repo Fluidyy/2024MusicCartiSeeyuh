@@ -26,6 +26,7 @@ public class Boxpiv extends SubsystemBase{
 
     private double m_tolerance;
 
+    
       
     private PIDController pid = new PIDController(0.03, 0, 0);
         private TrapezoidProfile.State m_tpState = new TrapezoidProfile.State(0.0, 0.0);
@@ -38,6 +39,7 @@ public class Boxpiv extends SubsystemBase{
     }
     @Override
     public void periodic(){
+        SmartDashboard.putNumber("Boxpiv", boxpivR.getPosition().getValueAsDouble());  
 
     }
     public void boxpivotMotor(double speed){
@@ -50,7 +52,7 @@ public class Boxpiv extends SubsystemBase{
 
     public void encoder(){
        
-    SmartDashboard.putNumber("Boxpiv", boxpivR.getPosition().getValueAsDouble());  
+    
     }
 
     public double setSetpoint(double setpoint){

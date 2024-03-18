@@ -21,13 +21,13 @@ import com.revrobotics.RelativeEncoder;
 public class projectiles extends SubsystemBase{
 
     private Timer AutoTimer2 = new Timer();
-    private CANSparkMax OutakeR = new CANSparkMax(26, MotorType.kBrushless);
-    private CANSparkMax OutakeL = new CANSparkMax(25, MotorType.kBrushless);
-    private CANSparkMax wrist = new CANSparkMax(20, MotorType.kBrushless);
+    private CANSparkMax OutakeR = new CANSparkMax(12, MotorType.kBrushless);
+    private CANSparkMax OutakeL = new CANSparkMax(13, MotorType.kBrushless);
+
 
     private PIDController wristpiPidController = new PIDController(0.03, 0, 0);
     private PIDController elevatorpidcController = new PIDController(0.05, 0, 0);
-    private RelativeEncoder wristE = wrist.getEncoder();
+
 
      private RelativeEncoder OutakeE = OutakeL.getEncoder();
      private final VelocityVoltage m_voltageVelocityLeft = new VelocityVoltage(0.0, 0.0, false, 0.0, 0, false, false, false);
@@ -41,6 +41,7 @@ public class projectiles extends SubsystemBase{
 public projectiles(){}
 @Override
 public void periodic(){
+    
 
 }
 
@@ -49,13 +50,7 @@ public void setoutakeLO(double leftv, double rightv){
     OutakeR.set(rightv);
     
 }
-public void shuffleboard(){
-    SmartDashboard.putNumber("wrist", wristE.getPosition());
-   
 
-
-    SmartDashboard.putNumber("Outake Velocity", OutakeE.getVelocity());
-}
 public void setShooterSetpoints(setpoint setpoints) {
 
     OutakeR.set(setpoints.shooterLeft);
@@ -68,7 +63,7 @@ public boolean check(setpoint setpoint){
 }
 
 public void setoutakeTE(double speed){
-    OutakeL.set(speed);
+    OutakeL.set(-speed);
     OutakeR.set(speed);
     
 }
@@ -87,10 +82,7 @@ public void Unjam(){
 
 // }
 
-public double wristpid(double setpoint){
-     wristpiPidController.setSetpoint(setpoint);
-    return wristpiPidController.calculate(wristE.getPosition());
-}
+
 // public Command elevatorcmd(double setpoint){
     
         
@@ -123,34 +115,34 @@ public double wristpid(double setpoint){
 //    return elevatorE.getPosition() >= setpoint-3 && elevatorE.getPosition() <= setpoint+3;
 // }
 
-public Command wristcmd(double setpoint){
+// public Command wristcmd(double setpoint){
     
         
-    return new Command() {
-        @Override
-        public void initialize() {
-            // Initialization code, such as resetting encoders or PID controllers
-        }
+//     return new Command() {
+//         @Override
+//         public void initialize() {
+//             // Initialization code, such as resetting encoders or PID controllers
+//         }
 
-        @Override
-        public void execute() {
-            double speed = wristpid(setpoint); // Assuming setpid() calculates the speed based on PID
-            wrist.set(speed);
+//         @Override
+//         public void execute() {
+//             double speed = wristpid(setpoint); // Assuming setpid() calculates the speed based on PID
+//             wrist.set(speed);
 
 
-        }
+//         }
 
-        @Override
-        public void end(boolean interrupted) {
-            wrist.set(0); // Stop the motor when the command ends or is interrupted
-        }
+//         @Override
+//         public void end(boolean interrupted) {
+//             wrist.set(0); // Stop the motor when the command ends or is interrupted
+//         }
 
-        @Override
-        public boolean isFinished() {
-            return wristE.getPosition() == setpoint ; // Check if the setpoint is reached
-        }
-    };
-}
+//         @Override
+//         public boolean isFinished() {
+//             return wristE.getPosition() == setpoint ; // Check if the setpoint is reached
+//         }
+//     };
+// }
 
 public Command lookupCommand(double leftv, double rightv){
     
@@ -163,7 +155,7 @@ public Command lookupCommand(double leftv, double rightv){
 
         @Override
         public void execute() {
-            OutakeL.set(leftv);
+            OutakeL.set(-leftv);
             OutakeR.set(rightv);
 
 
@@ -171,7 +163,8 @@ public Command lookupCommand(double leftv, double rightv){
 
         @Override
         public void end(boolean interrupted) {
-            wrist.set(0); // Stop the motor when the command ends or is interrupted
+           OutakeL.set(0); // Stop the motor when the command ends or is interrupted
+           OutakeR.set(0);
         }
 
         @Override
