@@ -242,10 +242,11 @@ public class Boxpiv extends SubsystemBase{
     
             @Override
             public boolean isFinished() {
-                return boxpivR.getPosition().getValueAsDouble() >= setpoint-1 && boxpivR.getPosition().getValueAsDouble()<= setpoint+1;
+                return boxpivR.getPosition().getValueAsDouble() >= setpoint-.5 && boxpivR.getPosition().getValueAsDouble()<= setpoint+.5;
             }
         };
-    }    
+    }  
+      
 
      public Command boxpivcmdTOampslow(double setpoint){
     

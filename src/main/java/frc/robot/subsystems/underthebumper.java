@@ -25,12 +25,13 @@ public class underthebumper extends SubsystemBase{
     
 
     private RelativeEncoder uEncoder = underbumpL.getEncoder();
-    private DigitalInput beambreaker = new DigitalInput(1);
+    private DigitalInput beambreaker = new DigitalInput(0);
     private PIDController pid = new PIDController(0.05, 0, 0);
 
     public underthebumper(){}
     @Override
     public void periodic(){
+        SmartDashboard.putBoolean("Beam1", beambreaker.get());
 
     }
     @Override
@@ -83,7 +84,7 @@ public class underthebumper extends SubsystemBase{
             @Override
             public void execute() {
                 // Assuming setpid() calculates the speed based on PID
-                underbumpL.set(speed);
+                underbumpL.set(-speed);
                 underbumpR.set(speed);
                 FeederMotor.set(feaderf);
 
@@ -118,7 +119,7 @@ public class underthebumper extends SubsystemBase{
             @Override
             public void execute() {
                 // Assuming setpid() calculates the speed based on PID
-                SmartDashboard.putBoolean("Beam", beambreaker.get());
+                
                 // if(beambreaker.get() == true){
                 underbumpL.set(-speed);
                  underbumpR.set(speed);
@@ -147,7 +148,7 @@ public class underthebumper extends SubsystemBase{
     
             @Override
             public boolean isFinished() {
-                return false; // Check if the setpoint is reached
+                return !beambreaker.get(); // Check if the setpoint is reached
             }
         };}
 

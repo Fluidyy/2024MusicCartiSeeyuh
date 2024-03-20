@@ -63,6 +63,7 @@ import frc.robot.subsystems.Boxpiv;
 import frc.robot.subsystems.projectiles;
 // import frc.robot.subsystems.outake;
 import frc.robot.subsystems.underthebumper;
+// import frc.robot.subsystems.PhotonVision;
 
 
 
@@ -155,21 +156,17 @@ public class RobotContainer
     // m_vision.useLimelight(true);
     // m_vision.setAlliance(Alliance.Blue);
     // m_vision.trustLL(true);
-  //   var visionEst = vision.getEstimatedGlobalPose();
-  // visionEst.ifPresent(
-  //         est -> {
-  //             var estPose = est.estimatedPose.toPose2d();
-  //             // Change our trust in the measurement based on the tags we can see
-  //             var estStdDevs = vision.getEstimationStdDevs(estPose);
-          //   var visionest = LimelightHelpers.getBotPose2d_wpiBlue("limelight");
+     // Correct pose estimate with vision measurements
+    //  var visionEst = Vision.getEstimatedGlobalPose();
+    //  visionEst.ifPresent(
+    //          est -> {
+    //              var estPose = est.estimatedPose.toPose2d();
+    //              // Change our trust in the measurement based on the tags we can see
+    //              var estStdDevs = Vision.getEstimationStdDevs(estPose);
 
-    
-          //     drivebase.addVisionMeasurement(
-                     
-          //     visionest.poe.toPose2d(), est.timestampSeconds, estStdDevs);
-          // });
-
-      
+    //              drivebase.addVisionMeasurement(
+    //                      est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+    //          });
 
       
 
@@ -181,11 +178,15 @@ public class RobotContainer
     // Command boxpivintake = new ParallelCommandGroup(boxpivsub.boxpivcmdAU(-11.04736328125), intakesub.intakefeaderCommandAU1(-0.25));
 
 
-    NamedCommands.registerCommand("runintake", newintake.intakeandfeederauto(-.50,-0.5,3));
-    NamedCommands.registerCommand("runintake2", newintake.intakeandfeederauto(-.75,-0.5,2));
-    NamedCommands.registerCommand("boxpivclose",boxpivsub.boxpivcmdAU(-13.04736328125));
-    NamedCommands.registerCommand("boxpivmid",boxpivsub.boxpivcmdAU1(-11.25));
-    NamedCommands.registerCommand("shoot",projectilesub.OtakeAU(-1));
+
+    NamedCommands.registerCommand("runintake", newintake.intakeandfeeder(0.7, 0.7));
+    NamedCommands.registerCommand("pullback", newintake.intakeandfeederauto(0,0.7 ,.7));
+        NamedCommands.registerCommand("pullbacko", projectilesub.Outtake(-1));
+
+    NamedCommands.registerCommand("runintake2", newintake.intakeandfeederauto(0.8,-0.80,2));
+    NamedCommands.registerCommand("boxpivclose",boxpivsub.boxpivcmdAU(-8.04736328125));
+    NamedCommands.registerCommand("boxpivfar",boxpivsub.boxpivcmdAU1(-6.8));
+    NamedCommands.registerCommand("shoot",projectilesub.OtakeAU(.60));
 
     
   //  NamedCommands.registerCommand("peiceintake", new ParallelCommandGroup(intakesub.intakeCommand(0.3),intakesub.feederCommand()));
@@ -305,22 +306,20 @@ driver_limelightButton.whileTrue(new teleoplimelight(
 UnjamButton.whileTrue(new SequentialCommandGroup(newintake.feedercmd(-0.7))).whileFalse(newintake.feedercmd(0));
 
 
-feaderf.whileTrue(newintake.feedercmd(0.7)).whileFalse(newintake.feedercmd(0));
+feaderf.whileTrue(new ParallelCommandGroup(newintake.feedercmd(0.7),projectilesub.Outtake(-1))).whileFalse(new ParallelCommandGroup(newintake.feedercmd(0),projectilesub.Outtake(0)));
 
 
 subwoofer.whileTrue(new ParallelCommandGroup(boxpivsub.boxpivcmdTO(-3.43359375),projectilesub.Outtake(0.65))).whileFalse(new ParallelCommandGroup(projectilesub.Outtake(0),boxpivsub.boxpivcmdTO(0)));
-podium.whileTrue(new ParallelCommandGroup(boxpivsub.boxpivcmdTO(-7),projectilesub.Outtake(-1))).whileFalse(new ParallelCommandGroup(boxpivsub.boxpivcmdTO(0)) );
-
-// AMPButton.whileTrue(new SequentialCommandGroup(boxpivsub.boxpivcmdTOamp(-3.91650390625), new ParallelCommandGroup(boxpivsub.boxpivcmdTO(-3.91650390625),projectilesub.wristcmd(17.857131958007812)))).whileFalse(new SequentialCommandGroup(projectilesub.wristcmd(0),boxpivsub.boxpivcmdTOampslow(0)));
+podium.whileTrue(new ParallelCommandGroup(boxpivsub.boxpivcmdTO(-8),projectilesub.Outtake(0.65))).whileFalse(new ParallelCommandGroup(projectilesub.Outtake(0),boxpivsub.boxpivcmdTO(0)));
+AMPButton.whileTrue(new SequentialCommandGroup(boxpivsub.boxpivcmdTOamp(-19.3),new ParallelCommandGroup(projectilesub.Outtake(0.15),boxpivsub.boxpivcmdTO(-19.3)))).whileFalse(new ParallelCommandGroup(projectilesub.Outtake(0),boxpivsub.boxpivcmdTO(0)));
 Outake.whileTrue(projectilesub.Outtake(0.3)).whileFalse(projectilesub.Outtake(0));
-
 
 
 
 // intakegroundButton
 intakeButton.whileTrue(
-new ParallelCommandGroup(
-   newintake.intakeandfeeder(0.7, 0.7)))
+new SequentialCommandGroup(
+   newintake.intakeandfeeder(0.7, 0.7), newintake.intakeandfeederauto(0,0.5 ,.5)))
    .whileFalse(newintake.intakeandfeeder(0,0));
    
 // wrist.whileTrue(

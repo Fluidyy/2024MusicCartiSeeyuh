@@ -67,7 +67,11 @@ public void setoutakeTE(double speed){
     OutakeR.set(speed);
     
 }
-
+public void setoutakeTErun(double speed){
+    OutakeL.set(-speed);
+    OutakeR.set(speed);
+    
+}
 public void Unjam(){
     OutakeL.set(-.3);
     OutakeR.set(-.3);
@@ -183,6 +187,14 @@ public Command Outtake(double speed){
         () -> setoutakeTE(speed)
         );
     }
+    // public Command Outtake(fuckdouble speed){
+
+    //     return run(
+            
+
+    //     () -> setoutakeTE(speed)
+    //     );
+    //}
 public Command ProjectilesUnjam(double speed){
 
         return run(

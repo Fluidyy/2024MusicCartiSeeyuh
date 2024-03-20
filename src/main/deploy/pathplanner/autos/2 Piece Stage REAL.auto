@@ -2,21 +2,15 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.9292510892714109,
-      "y": 6.798323596647194
+      "x": 0.8,
+      "y": 4.29
     },
-    "rotation": -120.2564371635293
+    "rotation": 120.20470624095358
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
-        {
-          "type": "named",
-          "data": {
-            "name": "intakepivotdown"
-          }
-        },
         {
           "type": "deadline",
           "data": {
@@ -43,7 +37,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "runintake"
+                  "name": "runintake2"
                 }
               },
               {
@@ -64,7 +58,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.5
           }
         },
         {
@@ -74,22 +68,40 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "runintake2"
+                  "name": "runintake"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "TwoPieceTopone"
+                  "pathName": "Stage Side"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of TwoPieceTopone"
+            "pathName": "Stage Side Back"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "pullback"
           }
         },
         {
@@ -105,7 +117,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "boxpivmid"
+                  "name": "boxpivclose"
                 }
               }
             ]
@@ -118,7 +130,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "runintake"
+                  "name": "runintake2"
                 }
               },
               {
@@ -130,7 +142,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "boxpivmid"
+                  "name": "boxpivclose"
                 }
               }
             ]
