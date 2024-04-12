@@ -42,9 +42,8 @@ import java.io.File;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import frc.robot.subsystems.Limelight;
-// import frc.robot.subsystems.LimelightHelpers;
-import frc.robot.commands.*;
+ // import frc.robot.subsystems.LimelightHelpers;
+
 
 
 /**
@@ -78,6 +77,8 @@ public class Robot extends TimedRobot
   /**
    * This function is run when the robot is first started up and should be used for any initialization code.
    */
+  UsbCamera camera1;
+  UsbCamera camera2;
   @Override
   public void robotInit()
   {
@@ -90,11 +91,9 @@ public class Robot extends TimedRobot
     // immediately when disabled, but then also let it be pushed more 
     disabledTimer = new Timer();
 
-    // CameraServer.startAutomaticCapture(0);
-    // UsbCamera camer1UsbCamera = new UsbCamera("camera1", 0);
-    // camer1UsbCamera.setResolution(100, 100);
-    // camer1UsbCamera.setFPS(30);
-    // PortForwarder.add(5800, "limelight.local", 5800);
+   camera1=  CameraServer.startAutomaticCapture(0);
+    camera2= CameraServer.startAutomaticCapture(1);
+   
 
 
 

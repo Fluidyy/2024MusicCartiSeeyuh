@@ -13,10 +13,12 @@ import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import frc.robot.subsystems.lookuptable.setpoint;
+// import frc.robot.subsystems.lookuptable.setpoint;
 import frc.robot.Constants;
+import frc.robot.subsystems.lookuptable.setpoint;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
+import frc.robot.*;
 
 
 public class Boxpiv extends SubsystemBase{
@@ -28,7 +30,7 @@ public class Boxpiv extends SubsystemBase{
 
     
       
-    private PIDController pid = new PIDController(0.03, 0, 0);
+    private PIDController pid = new PIDController(0.05, 0, 0);
         private TrapezoidProfile.State m_tpState = new TrapezoidProfile.State(0.0, 0.0);
         private Timer AutoTimer = new Timer();
     
@@ -87,14 +89,12 @@ public class Boxpiv extends SubsystemBase{
     public void lookuptable(setpoint setpoint){
 
         double speed = setSetpoint(setpoint.arm);
-        boxpivL.set(speed);
-        boxpivR.set(speed);
-
+        boxpivotMotor(speed);
 
     }
-    public boolean isarmthere(setpoint setpoint){
-       return boxpivR.getPosition().getValueAsDouble() >= setpoint.arm-1 && boxpivR.getPosition().getValueAsDouble()<= setpoint.arm+1;
-    }
+    // public boolean isarmthere(setpoint setpoint){
+    //    return boxpivR.getPosition().getValueAsDouble() >= setpoint.arm-1 && boxpivR.getPosition().getValueAsDouble()<= setpoint.arm+1;
+    // }
     public Command boxpivcmdLO(setpoint setpoint){
     
         
@@ -224,6 +224,7 @@ public class Boxpiv extends SubsystemBase{
             @Override
             public void initialize() {
                 // Initialization code, such as resetting encoders or PID controllers
+                pid.setP(0.06);
             }
     
             @Override
@@ -242,7 +243,7 @@ public class Boxpiv extends SubsystemBase{
     
             @Override
             public boolean isFinished() {
-                return boxpivR.getPosition().getValueAsDouble() >= setpoint-.5 && boxpivR.getPosition().getValueAsDouble()<= setpoint+.5;
+                return boxpivR.getPosition().getValueAsDouble() >= setpoint-0.5 && boxpivR.getPosition().getValueAsDouble()<= setpoint+0.5;
             }
         };
     }  

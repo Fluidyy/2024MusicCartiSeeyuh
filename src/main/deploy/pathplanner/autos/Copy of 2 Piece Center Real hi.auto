@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.49,
-      "y": 5.54
+      "x": 1.42,
+      "y": 5.539225686154654
     },
-    "rotation": 180.0
+    "rotation": 179.80079609093647
   },
   "command": {
     "type": "sequential",
@@ -56,6 +56,12 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -93,12 +99,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "pullback"
-          }
-        },
-        {
           "type": "deadline",
           "data": {
             "commands": [
@@ -111,7 +111,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "boxpivclose"
+                  "name": "boxpivfar"
                 }
               }
             ]
@@ -136,7 +136,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "boxpivclose"
+                  "name": "boxpivfar"
                 }
               }
             ]

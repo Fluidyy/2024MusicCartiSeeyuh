@@ -2,11 +2,12 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.swervedrive.drivebase;
+package frc.robot.commands.swervedrive;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.swervedrive.drivebase.teleop;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
@@ -15,7 +16,7 @@ import swervelib.SwerveController;
 /**
  * An example command that uses an example subsystem.
  */
-public class teleop extends Command
+public class teleopslow extends Command
 {
 
   private  SwerveSubsystem swerve;
@@ -32,7 +33,7 @@ public class teleop extends Command
    *
    * @param swerve The subsystem used by this command.
    */
-  public teleop(SwerveSubsystem swerve, DoubleSupplier vX, DoubleSupplier vY, DoubleSupplier omega,
+  public teleopslow(SwerveSubsystem swerve, DoubleSupplier vX, DoubleSupplier vY, DoubleSupplier omega,
                      BooleanSupplier driveMode)
    
   {
@@ -65,8 +66,8 @@ public class teleop extends Command
     SmartDashboard.putNumber("omega", angVelocity);
 
     // Drive using raw values.
-    swerve.drive1(new Translation2d(xVelocity * swerve.maximumSpeed / 1.3, yVelocity * swerve.maximumSpeed / 1.3).times(swerve.maximumSpeed),
-                 angVelocity * controller.config.maxAngularVelocity /1.3,
+    swerve.drive1(new Translation2d(xVelocity * swerve.maximumSpeed / 2.8, yVelocity * swerve.maximumSpeed / 2.8).times(swerve.maximumSpeed),
+                 angVelocity * controller.config.maxAngularVelocity /1.5,
                  driveMode.getAsBoolean());
   }
 

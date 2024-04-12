@@ -5,7 +5,7 @@
       "x": 0.73,
       "y": 6.729254996971533
     },
-    "rotation": -120.08353225806485
+    "rotation": -121.21292076779044
   },
   "command": {
     "type": "sequential",
@@ -89,7 +89,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of Copy of TwoPieceTopone"
+            "pathName": "Copy of TwoPieceTopone"
           }
         },
         {
@@ -105,32 +105,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "pullback"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "pullbacko"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
                   "name": "shoot"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "boxpivfar"
+                  "name": "boxpivclose"
                 }
               }
             ]
@@ -155,7 +136,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "boxpivfar"
+                  "name": "boxpivclose"
                 }
               }
             ]

@@ -5,7 +5,7 @@
       "x": 0.8,
       "y": 4.29
     },
-    "rotation": 120.20470624095358
+    "rotation": 119.37774506757971
   },
   "command": {
     "type": "sequential",
@@ -89,19 +89,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Stage Side Back"
+            "pathName": "Copy of Stage Side"
           }
         },
         {
           "type": "wait",
           "data": {
             "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "pullback"
           }
         },
         {

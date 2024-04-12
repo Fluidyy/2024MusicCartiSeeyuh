@@ -15,6 +15,7 @@ import frc.robot.subsystems.Boxpiv;
 
 import frc.robot.subsystems.lookuptable.ShoterPreset;
 import frc.robot.subsystems.lookuptable.lookuptable;
+import frc.robot.subsystems.lookuptable.lookuptableabs;
 import frc.robot.Constants;
 import frc.robot.subsystems.projectiles;
 import frc.robot.subsystems.underthebumper;
@@ -26,7 +27,7 @@ public class LookUpShotoot extends Command {
     setpoint m_setpoints;
 
     ShoterPreset m_shotInfo;
-    lookuptable m_lookuLookuptable;
+    lookuptableabs m_lookuLookuptable;
     DoubleSupplier m_distance;
     projectiles m_shooter;
     underthebumper s_intake;
@@ -41,7 +42,7 @@ public class LookUpShotoot extends Command {
         m_shooter = shooter;
         s_intake = intake;
        
-        m_lookuLookuptable = new lookuptable();
+        m_lookuLookuptable = new lookuptableabs();
         m_distance = distance;
         m_setpoints = Constants.LOOKUP;
 
@@ -73,18 +74,10 @@ public class LookUpShotoot extends Command {
         m_shooter.setShooterSetpoints(m_setpoints);
         m_Boxpiv.lookuptable(m_setpoints);
 
-        if (m_Boxpiv.isarmthere(m_setpoints)) {
-            timer.start();
-            if(timer.get() <= 3){
-                s_intake.FeederMotor1(-0.5);
+       
             
-                
-            }
-            else{
-                s_intake.FeederMotor1(0);
-            }
         }
-    }
+    
 
 
     
@@ -94,7 +87,8 @@ public class LookUpShotoot extends Command {
     public void end(boolean interrupted) {
         // Stop the Shooter but keep the Arm control going
         m_shooter.setoutakeTE(0);
-        
+        m_Boxpiv.boxpivcmdTO(0);
+               
     
         // Don't stop the shooter in auto - copy this file for auto
     }

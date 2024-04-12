@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class underthebumper extends SubsystemBase{
     private Timer AutoTimer = new Timer();
+        private Timer AutoTimer1 = new Timer();
     private Timer AutoTimer3 = new Timer();
 
     private CANSparkMax underbumpR = new CANSparkMax(9,MotorType.kBrushless);
@@ -25,7 +26,7 @@ public class underthebumper extends SubsystemBase{
     
 
     private RelativeEncoder uEncoder = underbumpL.getEncoder();
-    private DigitalInput beambreaker = new DigitalInput(0);
+    private DigitalInput beambreaker = new DigitalInput(1);
     private PIDController pid = new PIDController(0.05, 0, 0);
 
     public underthebumper(){}
@@ -70,6 +71,41 @@ public class underthebumper extends SubsystemBase{
         );       
         
     }
+        public Command autoampshit(double feader){
+    
+        
+        return new Command() {
+            @Override
+            public void initialize() {
+
+                // Initialization code, such as resetting encoders or PID controllers
+            }
+    
+            @Override
+            public void execute() {
+                // Assuming setpid() calculates the speed based on PID
+                if(!beambreaker.get()){
+                    FeederMotor.set(feader);
+                }
+
+
+            
+            
+            }
+    
+            @Override
+            public void end(boolean interrupted) {
+                underbumpL.set(0);
+                underbumpR.set(0);
+                FeederMotor.set(0);
+                // Stop the motor when the command ends or is interrupted
+            }
+    
+            @Override
+            public boolean isFinished() {
+                return beambreaker.get(); // Check if the setpoint is reached
+            }
+        };}
     public Command intakeandfeederauto(double speed,double feaderf,double time){
     
         

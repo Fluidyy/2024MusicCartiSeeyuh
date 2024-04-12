@@ -29,7 +29,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 // import frc.robot.subsystems.LimelightHelpers;
-import frc.robot.subsystems.LimelightHelpers;
 
 import java.io.File;
 import java.util.function.DoubleSupplier;
@@ -57,7 +56,7 @@ public class SwerveSubsystem extends SubsystemBase
   /**
    * Maximum speed of the robot in meters per second, used to limit acceleration.
    */
-  public        double      maximumSpeed = Units.feetToMeters(17);
+  public        double      maximumSpeed = Units.feetToMeters(20);
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -137,15 +136,15 @@ public class SwerveSubsystem extends SubsystemBase
         this::getRobotVelocity, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
         this::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
         new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                                         new PIDConstants(.60, 0.0, 0.08),
+                                         new PIDConstants(.60, 0.0, 0),
                                          // Translation PID constants
-                                         new PIDConstants(5,
+                                         new PIDConstants(3,
                                                           0,
                                                           0),
                                          // Rotation PID constants
-                                         3,
+                                         4,
                                          // Max module speed, in m/s
-                                         0.4,
+                                         0.627,
                                          // Drive base radius in meters. Distance from robot center to furthest module.
                                          new ReplanningConfig()
                                          // Default path replanning config. See the API for the options here
@@ -403,6 +402,7 @@ public class SwerveSubsystem extends SubsystemBase
   @Override
   public void periodic()
   {
+    SmartDashboard.putNumber("distance from speaker",calcDistToSpeaker());
   }
 
   @Override

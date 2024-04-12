@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.swervedrive.drivebase;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
@@ -14,6 +14,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.swervedrive.drivebase.teleop;
 import frc.robot.subsystems.PhotonVision;
+import frc.robot.subsystems.cam2photon;
 
 import java.util.function.Supplier;
 
@@ -49,8 +50,8 @@ import static edu.wpi.first.units.Units.*;
 
 
 
-public class autorotate extends Command {
-    private PhotonVision s_vision;
+public class autointake extends Command {
+    private cam2photon s_vision;
     private SwerveSubsystem s_Swerve; 
 
     private DoubleSupplier translationSup;
@@ -62,7 +63,7 @@ public class autorotate extends Command {
     private double setpoint =  15;
   private  SwerveController controller;
 
-   public autorotate(PhotonVision photonvision ,SwerveSubsystem s_Swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, BooleanSupplier robotCentricSup) {
+   public autointake(cam2photon photonvision ,SwerveSubsystem s_Swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, BooleanSupplier robotCentricSup) {
         s_vision = photonvision;
         this.s_Swerve = s_Swerve;
         this.translationSup = translationSup;
@@ -98,6 +99,7 @@ public class autorotate extends Command {
         // double distFactor = 0.2 * (s_vision.getRZ() > 5 ? 5 : s_vision.getRZ());
     //     /* Get rotation */
         PIDController turnController = new PIDController(0.04, 0.0001, 0.000005);
+        PIDController forword = new PIDController(0.04, 0.000001, 0.000005);
         turnController.enableContinuousInput(-180, 180);
         // double  rotationSpeed = -turnController.calculate(s_vision.getLatestResult().getBestTarget().getYaw(), 0);
     // 2    /* Drive */
@@ -111,10 +113,12 @@ public class autorotate extends Command {
     //     // );
     var result = s_vision.getLatestResult();
     if(result.hasTargets()){
+        double range = s_vision.range();
+        double forwordspeed = -forword.calculate(range);
 
         double rotationspeed = -turnController.calculate(result.getBestTarget().getYaw(),0);
         s_Swerve.drive1(
-            new Translation2d(translationVal,strafeVal).times(14),
+            new Translation2d(forwordspeed,strafeVal).times(14),
             -rotationspeed *1.5,
             robotCentricSup.getAsBoolean()
             

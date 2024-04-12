@@ -12,8 +12,10 @@ import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.PIDController;
-import frc.robot.subsystems.lookuptable.setpoint;
+// import frc.robot.subsystems.lookuptable.setpoint;
 import frc.robot.Constants;
+import frc.robot.subsystems.lookuptable.setpoint;
+
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.RelativeEncoder;
 
@@ -54,18 +56,22 @@ public void setoutakeLO(double leftv, double rightv){
 public void setShooterSetpoints(setpoint setpoints) {
 
     OutakeR.set(setpoints.shooterLeft);
-    OutakeL.set(setpoints.shooterRight);
+    OutakeL.set(-setpoints.shooterRight);
     
 }
 
-public boolean check(setpoint setpoint){
-    return OutakeE.getVelocity() == setpoint.shooterLeft;
-}
+// public boolean check(setpoint setpoint){
+//     return OutakeE.getVelocity() == setpoint.shooterLeft;
+// }
 
 public void setoutakeTE(double speed){
     OutakeL.set(-speed);
     OutakeR.set(speed);
     
+}
+public void setoutakeTEhigher(double speed){
+    OutakeL.set(-speed);
+    OutakeR.set(speed*0.8);
 }
 public void setoutakeTErun(double speed){
     OutakeL.set(-speed);
@@ -185,6 +191,15 @@ public Command Outtake(double speed){
             
 
         () -> setoutakeTE(speed)
+        );
+    }
+
+    public Command OuttakeAmp(double speed){
+
+        return run(
+            
+
+        () -> setoutakeTEhigher(speed)
         );
     }
     // public Command Outtake(fuckdouble speed){

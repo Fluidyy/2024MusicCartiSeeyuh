@@ -15,10 +15,11 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import frc.robot.subsystems.lookuptable.setpoint;
 import frc.robot.subsystems.lookuptable.setpoint.GameState;
 import swervelib.math.Matter;
 import swervelib.parser.PIDFConfig;
-import frc.robot.subsystems.lookuptable.setpoint;
+
 import edu.wpi.first.math.Matrix;
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean constants. This
@@ -39,7 +40,7 @@ public final class Constants
       //   public static final setpoint PREPCLIMB = new setpoint(0.0, 0.4, 0.0,0.0,  GameState.PREPCLIMB);
       //   public static final setpoint CLIMB = new setpoint(0.0, 0.4, 0.0,0.0,  GameState.CLIMB);
       //   public static final setpoint TRAP = new setpoint(0.0, 0.4, 20.0,20.0,  GameState.TRAP);
-        public static final setpoint LOOKUP = new setpoint(0.0, 0.4, 20.0,25.0,  GameState.LOOKUP);
+         public static final setpoint LOOKUP = new setpoint(0.0, 0.4, 20.0,25.0,  GameState.LOOKUP);
         
         public static final Pose2d BLUE_SPEAKER = new Pose2d(Units.inchesToMeters(-1.5), Units.inchesToMeters(218.42), new Rotation2d(0));
     public static final Pose2d RED_SPEAKER = new Pose2d(Units.inchesToMeters(652.73), Units.inchesToMeters(218.42), new Rotation2d(Math.PI));
@@ -76,11 +77,11 @@ public final class Constants
   }
 
   public static class Vision {
-        public static final String kCameraName = "front_cam";
+        public static final String kCameraName = "Cam1";
         //public static final String kCameraName = "USB_Camera";
         // Cam mounted facing forward, half a meter forward of center, half a meter up from center.
         public static final Transform3d kRobotToCam =
-                new Transform3d(new Translation3d(.174,-0.186, 0.588), new Rotation3d(0, Math.toRadians(10),0));
+                new Transform3d(new Translation3d(-0.229,0.33, 0.292), new Rotation3d(0, Math.toRadians(20),0));
 
         //public static final Transform3d kRobotToCam =
                 //new Transform3d(new Translation3d(0.264922,0.2465578, 0.2182876), new Rotation3d(0, Math.toRadians(22.09),Math.toRadians(5)));

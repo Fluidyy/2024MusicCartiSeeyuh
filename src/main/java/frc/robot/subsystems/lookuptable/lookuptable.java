@@ -13,15 +13,17 @@ public class lookuptable {
     }
     public lookuptable() {
         shooterConfig = new ShooterConfig();
-                shooterConfig.getShooterConfigs().add(new ShoterPreset(-13.04736328125, -100, -10, .5)); // Distance -> Bumper
+                shooterConfig.getShooterConfigs().add(new ShoterPreset(-7.0021484375, 0.8, 0.8, 1.0601)); // Distance -> Bumper
+                shooterConfig.getShooterConfigs().add(new ShoterPreset(-5.49853515625, 0.8, 0.8, 1.25)); // Distance -> Bumper
+        shooterConfig.getShooterConfigs().add(new ShoterPreset(-4.79638671875, 0.8, 0.8, 1.5)); // Distance -> Bumper
+                shooterConfig.getShooterConfigs().add(new ShoterPreset(-4.27197265625, 0.8, 0.8, 1.75)); // Distance -> Bumper
+                          shooterConfig.getShooterConfigs().add(new ShoterPreset(-4.21484375, 0.8, 0.8, 2)); // Distance -> Bumper
+        shooterConfig.getShooterConfigs().add(new ShoterPreset(-3.7724609375, .8, 0.8, 2.25)); // Distance -> Bumper
+        shooterConfig.getShooterConfigs().add(new ShoterPreset(-3.9232421875, 0.8, 0.8, 2.5)); // Distance -> Bumper
+        shooterConfig.getShooterConfigs().add(new ShoterPreset(-3.50625, 0.8, 0.8, 3)); // Distance -> Bumper
+        shooterConfig.getShooterConfigs().add(new ShoterPreset(-3.427734375, 0.8,-0.8, 3.5)); // Distance -> Bumper
 
-        shooterConfig.getShooterConfigs().add(new ShoterPreset(-11, -1, -10, 1.68)); // Distance -> Bumper
-        shooterConfig.getShooterConfigs().add(new ShoterPreset(-10.8, -100, -100, 2)); // Distance -> Bumper
-        shooterConfig.getShooterConfigs().add(new ShoterPreset(-10.757, -0.8,- 0.8, 2.5)); // Distance -> Bumper
-        shooterConfig.getShooterConfigs().add(new ShoterPreset(-10.537, -0.8, -0.8, 3)); // Distance -> Bumper
-        shooterConfig.getShooterConfigs().add(new ShoterPreset(-10.316, -0.8,- 0.8, 3.5)); // Distance -> Bumper
-
-        shooterConfig.getShooterConfigs().add(new ShoterPreset(-9.5, -1, -1, 4.115)); // Distance -> Bumper
+        shooterConfig.getShooterConfigs().add(new ShoterPreset(-2.08681640625, .8, .8, 4)); // Distance -> Bumper
 
 
         Collections.sort(shooterConfig.getShooterConfigs());
@@ -106,11 +108,15 @@ public class lookuptable {
      * @return new interpolated shooter preset
      */ 
     private ShoterPreset interpolateShooterPreset(ShoterPreset StartPreset, ShoterPreset EndPreset, double PercentIn) {
-        double armAngle = StartPreset.getArmAngle() + (EndPreset.getArmAngle() - StartPreset.getArmAngle()) * PercentIn;
-        double leftShooter = StartPreset.getLeftShooter() + (EndPreset.getLeftShooter() - StartPreset.getLeftShooter()) * PercentIn;
-        double rightShooter = StartPreset.getRightShooter() + (EndPreset.getRightShooter() - StartPreset.getRightShooter()) * PercentIn;
-        double distance = StartPreset.getDistance() + (EndPreset.getDistance() - StartPreset.getDistance()) * PercentIn;
-
+        // Apply an exponential effect by squaring the PercentIn for acceleration
+        
+        double exponentialIn = Math.pow(PercentIn, 2);
+    
+        double armAngle = StartPreset.getArmAngle() + (EndPreset.getArmAngle() - StartPreset.getArmAngle()) * exponentialIn;
+        double leftShooter = StartPreset.getLeftShooter() + (EndPreset.getLeftShooter() - StartPreset.getLeftShooter()) * exponentialIn;
+        double rightShooter = StartPreset.getRightShooter() + (EndPreset.getRightShooter() - StartPreset.getRightShooter()) * exponentialIn;
+        double distance = StartPreset.getDistance() + (EndPreset.getDistance() - StartPreset.getDistance()) * exponentialIn;
+    
         return new ShoterPreset(armAngle, leftShooter, rightShooter, distance);
     }
 
