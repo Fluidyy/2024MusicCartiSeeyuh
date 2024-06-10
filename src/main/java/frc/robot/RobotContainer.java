@@ -5,8 +5,9 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
-
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -26,14 +27,19 @@ import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.commands.swervedrive.drivebase.autointake;
 import frc.robot.commands.swervedrive.drivebase.teleop;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 
 // import frc.robot.subsystems.intakesub;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.logging.Logger;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 // import frc.robot.subsystems.Limelight;
 // // import frc.robot.subsystems.PhotonVision;
@@ -98,6 +104,7 @@ public class RobotContainer
   Joystick operator = new Joystick(1);
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+   private final SendableChooser<Command> autoChooser2 = new SendableChooser<Command>();
 
 
 
@@ -118,7 +125,16 @@ public class RobotContainer
       private final JoystickButton Outake = new JoystickButton(operator, XboxController.Button.kBack.value);
       private final JoystickButton autointake = new JoystickButton(driver, XboxController.Button.kX.value);
             private final JoystickButton autoroate = new JoystickButton(driver, XboxController.Button.kX.value);
-      
+    // private final JoystickButton A = new JoystickButton(driver, XboxController.Button.kX.value);
+    // private final JoystickButton X = new JoystickButton(driver, XboxController.Button.kX.value);
+    // private final JoystickButton B = new JoystickButton(driver, XboxController.Button.kX.value);
+    // private final JoystickButton Y = new JoystickButton(driver, XboxController.Button.kX.value);
+    // private final JoystickButton Deadopen = new JoystickButton(driver, XboxController.Button.kX.value);
+    // private final JoystickButton C = new JoystickButton(driver, XboxController.Button.kX.value);
+    // private final JoystickButton D = new JoystickButton(driver, XboxController.Button.kX.value);
+    // private  Pose2d AP = new Pose2d();
+    // private  Pose2d XP = new Pose2d();
+
   
 
 
@@ -190,53 +206,21 @@ public class RobotContainer
             autoChooser.addOption("2 piece amp", new PathPlannerAuto("Ashrith"));
              autoChooser.addOption("2 piece center", new PathPlannerAuto("Copy of 2 Piece Center Real hi"));
 
+      PathPlannerPath exampleChoreoTraj = PathPlannerPath.fromChoreoTrajectory("testauto");
+    Command amp1 = new SequentialCommandGroup(AutoBuilder.followPath(exampleChoreoTraj),boxpivsub.boxpivcmdTO(0.5));
+    autoChooser2.addOption("amp", amp1);
+
 
     drivebase.odometrygetshuffleboard();
 
     configureBindings();
      SmartDashboard.putData("Auto chooser",autoChooser);
+
+     SmartDashboard.putData("Auto Chooser", autoChooser2);
    
     // projectilesub.shuffleboard();
-    AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
-                                                                   () -> MathUtil.applyDeadband(driver.getLeftY(),
-                                                                                                OperatorConstants.LEFT_Y_DEADBAND),
-                                                                   () -> MathUtil.applyDeadband(driver.getLeftX(),
-                                                                                                OperatorConstants.LEFT_X_DEADBAND),
-                                                                   () -> MathUtil.applyDeadband(driver.getRightX(),
-                                                                                                OperatorConstants.RIGHT_X_DEADBAND),
-                                                                   driver::getYButtonPressed,
-                                                                   driver::getAButtonPressed,
-                                                                   driver::getXButtonPressed,
-                                                                   driver::getBButtonPressed);
+  
 
-    // Applies deadbands and inverts controls because joysticks
-    // are back-right positive while robot
-    // controls are front-left positive
-    // left stick controls translation
-    // right stick controls the desired angle NOT angular rotation
-    Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
-        () -> MathUtil.applyDeadband(driver.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(driver.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> driver.getRightX(),
-        () -> driver.getRightY());
-
-    // Applies deadbands and inverts controls because joysticks
-    // are back-right positive while robot
-    // controls are front-left positive
-    // left stick controls translation
-    // right stick controls the angular velocity of the robot
-    Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
-        () -> MathUtil.applyDeadband(driver.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(driver.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> driver.getRawAxis(2));
-
-    // Command driveFieldOrientedDirectAngleSim = drivebase.simDriveCommand(
-    //     () -> MathUtil.applyDeadband(driver.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-    //     () -> MathUtil.applyDeadband(driver.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-    //     () -> driver.getRawAxis(2));
-
-    // drivebase.setDefaultCommand(
-    //     !RobotBase.isSimulation() ? driveFieldOrientedDirectAngle : driveFieldOrientedDirectAngleSim);
     teleop closedFieldRelOperator = new teleop(
       drivebase,
       () -> MathUtil.applyDeadband(driver.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
@@ -255,17 +239,15 @@ public class RobotContainer
   }
 
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary predicate, or via the
-   * named factories in {@link edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
-   * {@link CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller PS4}
-   * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight joysticks}.
-   */
 
   private void configureBindings()
   {
     
+    // if(DriverStation.getAlliance().get() == DriverStation.Alliance.Blue){
+    //   XP = new Pose2d(1.8,8.06,new Rotation2d(0));
+
+       
+    // }
 
 
   
@@ -275,19 +257,6 @@ public class RobotContainer
   
 
 
-
-// driver_limelightButton.whileTrue(new autorotate(
-//       lime,
-//       drivebase,
-//       () -> driver.getLeftY(),
-//       () -> driver.getLeftX(), 
-//       () -> driver.getRightX(), () -> false));
-
-
-
-
-
-//shuffleboards
 
 
 
@@ -321,23 +290,7 @@ intakeButton.whileTrue(
    newintake.intakeandfeeder(0.65, 0.75)))
    .whileFalse(newintake.intakeandfeeder(0,0));
    
-// wrist.whileTrue(
-//   projectilesub.wristcmd(17.857131958007812)
-// ).whileFalse(projectilesub.wristcmd(17.857131958007812));
 
-//Driver uses this button th pivot the box up and drive and lock into the chain
-// climbPivButton.whileTrue(
-//   new ParallelCommandGroup(boxpivsub.boxpivcmdTO(-8.61962890625))
-
-
-//   ).whileFalse(boxpivsub.boxpivcmdTO(-11));
-// climbButton.whileTrue(
-//   new SequentialCommandGroup(climbsub.ClimbCmd1(-0.75))
-// ).whileFalse(climbsub.ClimbCmd1(0));
-
-// climbButton.whileTrue(
-//   new SequentialCommandGroup(climbsub.ClimbCmd2(-0.75))
-// ).whileFalse(climbsub.ClimbCmd2(0));
 
 
 
@@ -350,12 +303,13 @@ outakeunjam1.whileTrue(projectilesub.Outtake(-0.5)).whileFalse(projectilesub.Out
 
 
 autointake.whileTrue(new autointake(
+    newintake,
       cam2,
       drivebase,
       () -> driver.getLeftY(),
       () -> driver.getLeftX(), 
 
-      () -> driver.getRightX(), () -> false));  
+      () -> driver.getRightX(), () -> false)).whileFalse(newintake.intakeandfeeder(0, 0));  
 
   
   
@@ -379,8 +333,10 @@ autointake.whileTrue(new autointake(
     climbpur.whileTrue(climbsub.ClimbCmd2(0.3)).whileFalse(climbsub.ClimbCmd2(0));
     
     climbpurd.whileTrue(climbsub.climbcmd(0.6)).whileFalse(climbsub.climbcmd(0));
+    Pose2d targetPose = new Pose2d(10, 5, Rotation2d.fromDegrees(180));
+    Command drive = drivebase.driveToPose(targetPose);
 
-    
+  
   }
  
   /**
@@ -390,8 +346,9 @@ autointake.whileTrue(new autointake(
    */
   public Command getAutonomousCommand()
   {
-    // An example command will be run in autonomous
-    return autoChooser.getSelected();
+    
+
+    return autoChooser2.getSelected();
     // return new SequentialCommandGroup();
   }
 

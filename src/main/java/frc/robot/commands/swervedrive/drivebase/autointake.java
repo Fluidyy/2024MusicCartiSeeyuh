@@ -15,6 +15,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.swervedrive.drivebase.teleop;
 import frc.robot.subsystems.PhotonVision;
 import frc.robot.subsystems.cam2photon;
+import frc.robot.subsystems.underthebumper;
 
 import java.util.function.Supplier;
 
@@ -53,6 +54,7 @@ import static edu.wpi.first.units.Units.*;
 public class autointake extends Command {
     private cam2photon s_vision;
     private SwerveSubsystem s_Swerve; 
+    private underthebumper intake;
 
     private DoubleSupplier translationSup;
     private DoubleSupplier strafeSup;
@@ -63,13 +65,14 @@ public class autointake extends Command {
     private double setpoint =  15;
   private  SwerveController controller;
 
-   public autointake(cam2photon photonvision ,SwerveSubsystem s_Swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, BooleanSupplier robotCentricSup) {
+   public autointake(underthebumper under, cam2photon photonvision ,SwerveSubsystem s_Swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, BooleanSupplier robotCentricSup) {
         s_vision = photonvision;
         this.s_Swerve = s_Swerve;
         this.translationSup = translationSup;
         this.strafeSup = strafeSup;
         this.rotationSup = rotationSup;
         this.robotCentricSup = robotCentricSup;
+        intake = under;
 
         this.controller = s_Swerve.getSwerveController();
  
@@ -123,6 +126,7 @@ public class autointake extends Command {
             robotCentricSup.getAsBoolean()
             
         );
+        intake.intakeandfeeder(0.65, 0.75);
     
 
     }
