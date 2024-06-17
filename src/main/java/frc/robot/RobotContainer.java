@@ -125,6 +125,7 @@ public class RobotContainer
       private final JoystickButton Outake = new JoystickButton(operator, XboxController.Button.kBack.value);
       private final JoystickButton autointake = new JoystickButton(driver, XboxController.Button.kX.value);
             private final JoystickButton autoroate = new JoystickButton(driver, XboxController.Button.kX.value);
+            private final JoystickButton 1autoroate = new JoystickButton(driver, XboxController.Button.kX.value);
     // private final JoystickButton A = new JoystickButton(driver, XboxController.Button.kX.value);
     // private final JoystickButton X = new JoystickButton(driver, XboxController.Button.kX.value);
     // private final JoystickButton B = new JoystickButton(driver, XboxController.Button.kX.value);
@@ -146,7 +147,7 @@ public class RobotContainer
    private final JoystickButton climbpul = new JoystickButton(driver, XboxController.Button.kStart.value);//p4
     private final JoystickButton climbpur = new JoystickButton(driver, XboxController.Button.kLeftStick.value);//p1
 
-  
+    
 
 
 
